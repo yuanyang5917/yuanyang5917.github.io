@@ -23,7 +23,7 @@ short_url: 'yuanyang5917.github.io/'
 google_analytics: UA-69281367-1
 disqus: username
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
-baseurl: /turbo/
+baseurl: 
 
 # Permalinks
 permalink: /:title
@@ -57,12 +57,12 @@ exclude: [vendor]
 safe: false
 lsi: false
 username: yuanyang5917
-repo: yuanyang5917
+repo: yuanyang5917.github.io
 branch: master
-relative_source: ../yuanyang5917/
-destination: ./_site/
-# production_url:  https://biomadeira.github.io/jasper/
-# source_url:      https://github.com/biomadeira/jasper/
+relative_source: ../yuanyang5917.github.io/
+destination: ../yuanyang5917.github.io-pages/
+production_url:  https://yuanyang5917.github.io
+source_url:      https://github.com/yuanyang5917/yuanyang5917.github.io/
 
 exclude:
   - README.md
