@@ -5,10 +5,10 @@
     </a>
     <ul>
         <li class="nav-home {% if page.current == 'home' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}">主页</a></li>
-        <li class="nav-fables {% if page.url contains 'android' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}_site/tag/android">Android</a></li>
-        <li class="nav-fables {% if page.url contains 'life' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}_site/tag/life">生活</a></li>
+        <li class="nav-fables {% if page.url contains 'android' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}tag/android">Android</a></li>
+        <li class="nav-fables {% if page.url contains 'life' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}tag/life">生活</a></li>
         <li class="nav-about {% if page.current == 'about' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}about">关于</a></li>
-        <li class="nav-author {% if page.current == 'author' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}_site/author/casper">作者</a></li>
+        <li class="nav-author {% if page.current == 'author' %} nav-current{% endif %}" role="presentation"><a href="{{ site.baseurl }}author/casper">作者</a></li>
     </ul>
     <a class="subscribe-button icon-feed" href="{{ site.baseurl }}rss.xml">Subscribe</a>
 </div>
