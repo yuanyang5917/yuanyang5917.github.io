@@ -59,8 +59,8 @@ lsi: false
 username: yuanyang5917
 repo: yuanyang5917.github.io
 branch: master
-relative_source: ../yuanyang5917.github.io/
-destination: ../yuanyang5917.github.io-pages/
+relative_source: ../jasper/
+destination: ../yuanyang5917.github.io/
 production_url:  https://yuanyang5917.github.io
 source_url:      https://github.com/yuanyang5917/yuanyang5917.github.io/
 
