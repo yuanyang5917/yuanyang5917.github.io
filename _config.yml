@@ -13,7 +13,7 @@ description: ——LuckyTurbo
 # Author's info
 author: LuckyTurbo
 # edit 'categories' in the front matter of every post to match this username
-nickname: LuckyTurbo
+nickname: casper
 bio: 非科班出生的Android开发者，在这科技爆棚的今天，有幸混口饭吃，在此耕耘，望有天能进入BAT.
 location: 苏州, China
 url: 'http://yuanyang5917.github.io/'
@@ -23,7 +23,7 @@ short_url: 'yuanyang5917.github.io/'
 google_analytics: UA-69281367-1
 disqus: username
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
-baseurl: 
+baseurl: /
 
 # Permalinks
 permalink: /:title
