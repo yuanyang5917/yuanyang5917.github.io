@@ -13,10 +13,10 @@
    
 	<item>
 	  <title>Android控件注解IOC注入(XUtils实现方式)</title>
-	  <link>/turbo//androidiocxutils</link>
+	  <link>//androidiocxutils</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-29T00:00:00+08:00</pubDate>
-	  <guid>/turbo//androidiocxutils</guid>
+	  <guid>//androidiocxutils</guid>
 	  <description><![CDATA[
 	     <h2 id="xutils">注解初始化控件(XUtils方式)</h2>
 
@@ -238,10 +238,10 @@ http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文�
 
 	<item>
 	  <title>安卓开发清单</title>
-	  <link>/turbo//android-inventory</link>
+	  <link>//android-inventory</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-21T00:00:00+08:00</pubDate>
-	  <guid>/turbo//android-inventory</guid>
+	  <guid>//android-inventory</guid>
 	  <description><![CDATA[
 	     <div class="highlighter-rouge"><pre class="highlight"><code>编程素养：
         ——数据结构与算法
@@ -288,10 +288,10 @@ android基础：
 
 	<item>
 	  <title>开篇碎语!</title>
-	  <link>/turbo//welcome-to-jekyll</link>
+	  <link>//welcome-to-jekyll</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-17T22:53:35+08:00</pubDate>
-	  <guid>/turbo//welcome-to-jekyll</guid>
+	  <guid>//welcome-to-jekyll</guid>
 	  <description><![CDATA[
 	     <div class="highlighter-rouge"><pre class="highlight"><code>做这个博客的冲动，来自于一个大三学学生的博客 ———— 此博客是用github pages ＋ jekyll 制作的。
 
