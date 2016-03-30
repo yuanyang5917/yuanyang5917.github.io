@@ -1,8 +1,8 @@
 # Jykell configuration
-#markdown: redcarpet
-#highlighter: pygments
-markdown: kramdown
-highlighter: rouge
+markdown: redcarpet
+highlighter: pygments
+#markdown: kramdown
+#highlighter: rouge
 paginate: 5
 language: 'en-uk'
 
@@ -61,8 +61,8 @@ repo: yuanyang5917.github.io
 branch: master
 relative_source: ../jasper/
 destination: ../yuanyang5917.github.io/
-production_url:  https://yuanyang5917.github.io
-source_url:      https://github.com/yuanyang5917/yuanyang5917.github.io/
+production_url:  https://yuanyang5917.github.io/
+source_url:      https://github.com/yuanyang5917/
 
 exclude:
   - README.md
