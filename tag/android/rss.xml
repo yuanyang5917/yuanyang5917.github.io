@@ -13,10 +13,10 @@
    
 	<item>
 	  <title>Android控件注解IOC注入(XUtils实现方式)</title>
-	  <link>//androidiocxutils</link>
+	  <link>//iocxutils</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-29T00:00:00+08:00</pubDate>
-	  <guid>//androidiocxutils</guid>
+	  <guid>//iocxutils</guid>
 	  <description><![CDATA[
 	     <h2 id="xutils">注解初始化控件(XUtils方式)</h2>
 
