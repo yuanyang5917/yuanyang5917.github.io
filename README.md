@@ -1,8 +1,11 @@
 ##[博客地址](http://yuanyang5917.github.io/)
 
-<iframe src="http://yuanyang5917.github.io/" width="450" height="400" >
+**Home page**
+![home page](https://raw.githubusercontent.com/yuanyang5917/yuanyang5917.github.io/master/assets/images/blog_example1.jpg)
+![home page](https://raw.githubusercontent.com/yuanyang5917/yuanyang5917.github.io/master/assets/images/blog_example2.jpg)
+**Menu**
+![home page](https://raw.githubusercontent.com/yuanyang5917/yuanyang5917.github.io/master/assets/images/blog_example3.jpg)
 
-<a href="http://yuanyang5917.github.io/">你的浏览器不支持iframe页面嵌套，请点击这里访问页面内容。</a>
+##[博客地址](http://yuanyang5917.github.io/)
 
-</iframe>
 
