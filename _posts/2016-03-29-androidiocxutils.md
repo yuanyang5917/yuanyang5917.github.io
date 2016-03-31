@@ -16,6 +16,9 @@ logo: 'assets/images/ghost.png'
 注解初始化控件(XUtils方式)
 -----------------
 
+>[DEMO链接地址](http://download.csdn.net/detail/yuanyang5917/9477513)
+
+
 > 在第一次潭州教育的公开课上接触了这个框架的讲解，我动手研究了一下，结果一出手就停不下来，先后被我碰上了（[Glow公司的技术博客——动态Android编程](http://tech.glowing.com/cn/dynamic-android-programming/) ）、从几个大牛的博客（学到了github pages + Jekyll 免费制作博客网站）<br />
 我发现不写博客，很多东西就会忘记(代码如何上传到jcenter我已经忘记了)<br />
 Just Do it!真的会有意想不到的收获！
