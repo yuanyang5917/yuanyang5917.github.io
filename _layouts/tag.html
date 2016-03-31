@@ -14,7 +14,7 @@ current: tag
     {% assign new_cover='assets/images/cover7.jpg' %}
     {% assign tag_description='Some of the greatest words ever spoken.' %}
 {% elsif page.url contains 'fiction' %}
-    {% assign new_cover='assets/images/cover1.jpg' %}
+    {% assign new_cover='assets/images/programing_common.jpg' %}
 {% endif %}
 
 <!-- < default}} -->
@@ -35,7 +35,7 @@ current: tag
             {% if tag_description %}
                 {{ tag_description }}
             {% elsif page.tag %}
-			    A {{ paginator.total_posts }}-post collection
+			    A {{ paginator.total_posts }}-Article
             {% endif %}
             </h2>
         </div>
