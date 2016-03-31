@@ -24,15 +24,15 @@
   <p><a href="https://www.processon.com/i/56fcb9fee4b04878f8245f1c">Process On一款非常好的UML在线编辑工具，made in China</a></p>
 </blockquote>
 
-<p>在UML类图中，常见几种关系：
-1.泛化(Generalization_FY:概括)(继承)
-2.实现(Realization_FY实现)(接口实现)
-3.关联(Association_FY协会)
-4.聚合(Aggregation_FY聚合)(整体与部分的关系，且部分可以离开整体而单独存在)
-5.组合(Composition_FY组合)(整体与部分的关系，但部分不能离开整体而单独存在)
-6.依赖(Dependency_FY依赖)</p>
+<figure class="highlight"><pre><code class="language-default" data-lang="default">在UML类图中，常见几种关系：
+1.泛化(Generalization_FY:概括)(继承 : 空三角 ＋ 直线)
+2.实现(Realization_FY实现)(接口实现 : 空三角 ＋ 虚线)
+3.关联(Association_FY协会)（直线 ＋ 箭头（箭头可无））
+4.聚合(Aggregation_FY聚合)(整体与部分的关系，且部分可以离开整体而单独存在)（空菱形 ＋ 直线 ＋ 方向）
+5.组合(Composition_FY组合)(整体与部分的关系，但部分不能离开整体而单独存在)（实菱形 ＋ 直线 ＋ 方向）
+6.依赖(Dependency_FY依赖)（虚线 ＋ 箭头）
 
-<p>类与类之间由弱到强关系是: 没关系 &gt; 依赖 &gt; 关联 &gt; 聚合 &gt; 组合。</p>
+类与类之间由弱到强关系是: 没关系 &gt; 依赖 &gt; 关联 &gt; 聚合 &gt; 组合。</code></pre></figure>
 
 <p>1.泛化（Generalization）</p>
 
@@ -113,16 +113,18 @@
   <p><a href="http://www.cnblogs.com/liuzhang/archive/2013/03/17/2964095.html">这里重点说下依赖与关联的区别</a></p>
 </blockquote>
 
-<p>依赖(dependency)
-可以简单的理解，就是一个类A使用到了另一个类B，而这种使用关系是具有偶然性的、、临时性的、非常弱的，但是B类的变化会影响到A；比如某人要过河，需要借用一条船，此时人与船之间的关系就是依赖；表现在代码层面，为类B作为参数被类A在某个method方法中使用。用带虚线的箭头。</p>
+<figure class="highlight"><pre><code class="language-default" data-lang="default">依赖(dependency)
+可以简单的理解，就是一个类A使用到了另一个类B，而这种使用关系是具有偶然性的、、临时性的、非常弱的，但是B类的变化会影响到A；比如某人要过河，需要借用一条船，此时人与船之间的关系就是依赖；表现在代码层面，为类B作为参数被类A在某个method方法中使用。用带虚线的箭头。
 
-<p>关联(association)
-他体现的是两个类、或者类与接口之间语义级别的一种强依赖关系，比如我和我的朋友；这种关系比依赖更强、不存在依赖关系的偶然性、关系也不是临时性的，一般是长期性的，而且双方的关系一般是平等的、关联可以是单向、双向的；表现在代码层面，为被关联类B以类属性的形式出现在关联类A中，也可能是关联类A引用了一个类型为被关联类B的全局变量；</p>
+
+关联(association)
+他体现的是两个类、或者类与接口之间语义级别的一种强依赖关系，比如我和我的朋友；这种关系比依赖更强、不存在依赖关系的偶然性、关系也不是临时性的，一般是长期性的，而且双方的关系一般是平等的、关联可以是单向、双向的；表现在代码层面，为被关联类B以类属性的形式出现在关联类A中，也可能是关联类A引用了一个类型为被关联类B的全局变量；</code></pre></figure>
 
 <blockquote>
   <p>依赖就像一夜情，依赖就是使用XX干了YY(仅仅是用了Ta的一个方法)，关联是夫妻，你所有的都是你老婆的(你是你老婆的成员变量)
 依赖就是对象偶然需要其它对象的某个方法或者某个属性，而关联是方向性的拥有关系，拥有那个对象，拥有那个对象的所有对外属性以及对外方法，完全深度拥有。</p>
 </blockquote>
+
 
 	  ]]></description>
 	</item>
