@@ -14,7 +14,7 @@ logo: 'assets/images/ghost.png'
 
 ## Studying
  - ButterKnife通过APT实现IOC的
- - 潭州教育视频学习（VIP跟公开课）
+ - 潭州教育视频学习
     [(1)ImageLoader架构解析
     (2)插件式开发
     (3)视察动画]
