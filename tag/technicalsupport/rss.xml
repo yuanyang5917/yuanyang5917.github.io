@@ -12,6 +12,27 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Technology Of Studying</title>
+	  <link>//technologyof-studying</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-03-31T00:00:00+08:00</pubDate>
+	  <guid>//technologyof-studying</guid>
+	  <description><![CDATA[
+	     <ul>
+  <li>ButterKnife通过APT实现IOC的</li>
+  <li>潭州教育视频学习（VIP跟公开课）
+ [(1)ImageLoader架构解析
+ (2)插件式开发
+ (3)视察动画]</li>
+  <li>高焕堂网易云公开课
+ ——Android中运用到的设计模式
+ [13 Kinds of Design Pattern in Android Framwork]</li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>UML类图关系</title>
 	  <link>//uml</link>
 	  <author>LuckyTurbo</author>

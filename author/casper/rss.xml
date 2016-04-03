@@ -12,6 +12,27 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Technology Of Studying</title>
+	  <link>//technologyof-studying</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-03-31T00:00:00+08:00</pubDate>
+	  <guid>//technologyof-studying</guid>
+	  <description><![CDATA[
+	     <ul>
+  <li>ButterKnife通过APT实现IOC的</li>
+  <li>潭州教育视频学习（VIP跟公开课）
+ [(1)ImageLoader架构解析
+ (2)插件式开发
+ (3)视察动画]</li>
+  <li>高焕堂网易云公开课
+ ——Android中运用到的设计模式
+ [13 Kinds of Design Pattern in Android Framwork]</li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>UML类图关系</title>
 	  <link>//uml</link>
 	  <author>LuckyTurbo</author>
@@ -417,11 +438,9 @@ android基础：
 	  <description><![CDATA[
 	     <div class="highlighter-rouge"><pre class="highlight"><code>做这个博客的冲动，来自于一个大三学学生的博客 ———— 此博客是用github pages ＋ jekyll 制作的。
 
-虽然这个博客现在还很demo，但是一切都是从青涩到成熟直至完美的 不是么？最重要的是得先走起来！！
+评论、分页、站内搜索、标签、分类、七牛图片优化、站点统计、网站模版话、SEO优化  －－ 有空相继完善
 
 标准化 －－ 流程化 －－ 自动化 （最终境界乃终极懒货）
-
-分页，站内搜索，标签，分类，七牛图片优化，站点统计，网站模版话，SEO优化  －－ 后面相继完善
 
 Fighting！！！！！！！
 </code></pre>
