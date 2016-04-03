@@ -12,6 +12,7 @@ logo: 'assets/images/ghost.png'
 
 ---
 
+## Studying
  - ButterKnife通过APT实现IOC的
  - 潭州教育视频学习（VIP跟公开课）
     [(1)ImageLoader架构解析
@@ -20,3 +21,7 @@ logo: 'assets/images/ghost.png'
  - 高焕堂网易云公开课
     ——Android中运用到的设计模式
     [13 Kinds of Design Pattern in Android Framwork]
+
+
+## 已学完
+ - XUtils控件注入实现[注解＋反射＋动态代理]
