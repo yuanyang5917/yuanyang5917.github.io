@@ -12,21 +12,281 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>注解初始化控件(ButterKnife方式)<上></title>
+	  <link>//butterknifedemo01</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-04-05T00:00:00+08:00</pubDate>
+	  <guid>//butterknifedemo01</guid>
+	  <description><![CDATA[
+	     <blockquote>
+  <p>在学习了XUtils的注入方式之后，看了下ButterKnife的实现方式，结果发现完全不一样，然后借鉴网上的博客，结果发现用的都是Eclipse以及旧版本的ButterKnife进行实现的。</p>
+
+  <p>这里我用AndroidStudio根据ButterKnife的版本进行了实现。</p>
+</blockquote>
+
+<p>文字枯燥，还是先看下butterknife的module图：
+<img src="http://img.blog.csdn.net/20160401092206024" alt="这里写图片描述" /></p>
+
+<p>先看下ButterKnife中生成的java代码（看看骚包的注释 Do not modify!）</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// Generated code from Butter Knife. Do not modify!</span>
+<span class="c1">// Generated code from Butter Knife. Do not modify!</span>
+<span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">butterknife</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.widget.AdapterView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">butterknife.ButterKnife</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">butterknife.internal.DebouncingOnClickListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">butterknife.internal.Finder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">butterknife.internal.Utils</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">butterknife.internal.ViewBinder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.IllegalStateException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.Object</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.Override</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.lang.SuppressWarnings</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleActivity</span><span class="err">$</span><span class="n">$ViewBinder</span><span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">SimpleActivity</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">ViewBinder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="n">bind</span><span class="o">(</span><span class="kd">final</span> <span class="n">Finder</span> <span class="n">finder</span><span class="o">,</span> <span class="kd">final</span> <span class="n">T</span> <span class="n">target</span><span class="o">,</span> <span class="n">Object</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Unbinder</span> <span class="n">unbinder</span> <span class="o">=</span> <span class="n">createUnbinder</span><span class="o">(</span><span class="n">target</span><span class="o">);</span>
+    <span class="n">View</span> <span class="n">view</span><span class="o">;</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968576</span><span class="o">,</span> <span class="s">"field 'title'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="mi">2130968576</span><span class="o">,</span> <span class="s">"field 'title'"</span><span class="o">);</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968577</span><span class="o">,</span> <span class="s">"field 'subtitle'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">subtitle</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="mi">2130968577</span><span class="o">,</span> <span class="s">"field 'subtitle'"</span><span class="o">);</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968578</span><span class="o">,</span> <span class="s">"field 'hello', method 'sayHello', and method 'sayGetOffMe'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">hello</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="mi">2130968578</span><span class="o">,</span> <span class="s">"field 'hello'"</span><span class="o">);</span>
+    <span class="n">unbinder</span><span class="o">.</span><span class="na">view2130968578</span> <span class="o">=</span> <span class="n">view</span><span class="o">;</span>
+    <span class="n">view</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DebouncingOnClickListener</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="n">doClick</span><span class="o">(</span><span class="n">View</span> <span class="n">p0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">sayHello</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+    <span class="n">view</span><span class="o">.</span><span class="na">setOnLongClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnLongClickListener</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">onLongClick</span><span class="o">(</span><span class="n">View</span> <span class="n">p0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">target</span><span class="o">.</span><span class="na">sayGetOffMe</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968579</span><span class="o">,</span> <span class="s">"field 'listOfThings' and method 'onItemClick'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">listOfThings</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="mi">2130968579</span><span class="o">,</span> <span class="s">"field 'listOfThings'"</span><span class="o">);</span>
+    <span class="n">unbinder</span><span class="o">.</span><span class="na">view2130968579</span> <span class="o">=</span> <span class="n">view</span><span class="o">;</span>
+    <span class="o">((</span><span class="n">AdapterView</span><span class="o">&lt;?&gt;)</span> <span class="n">view</span><span class="o">).</span><span class="na">setOnItemClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">AdapterView</span><span class="o">.</span><span class="na">OnItemClickListener</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="n">onItemClick</span><span class="o">(</span><span class="n">AdapterView</span><span class="o">&lt;?&gt;</span> <span class="n">p0</span><span class="o">,</span> <span class="n">View</span> <span class="n">p1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">p2</span><span class="o">,</span> <span class="kt">long</span> <span class="n">p3</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">onItemClick</span><span class="o">(</span><span class="n">p2</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968580</span><span class="o">,</span> <span class="s">"field 'footer'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">footer</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="mi">2130968580</span><span class="o">,</span> <span class="s">"field 'footer'"</span><span class="o">);</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">headerViews</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="na">listOf</span><span class="o">(</span>
+        <span class="n">finder</span><span class="o">.&lt;</span><span class="n">View</span><span class="o">&gt;</span><span class="n">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968576</span><span class="o">,</span> <span class="s">"field 'headerViews'"</span><span class="o">),</span> 
+        <span class="n">finder</span><span class="o">.&lt;</span><span class="n">View</span><span class="o">&gt;</span><span class="n">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968577</span><span class="o">,</span> <span class="s">"field 'headerViews'"</span><span class="o">),</span> 
+        <span class="n">finder</span><span class="o">.&lt;</span><span class="n">View</span><span class="o">&gt;</span><span class="n">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="mi">2130968578</span><span class="o">,</span> <span class="s">"field 'headerViews'"</span><span class="o">));</span>
+    <span class="n">target</span><span class="o">.</span><span class="na">unbinder</span> <span class="o">=</span> <span class="n">unbinder</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+  <span class="kd">protected</span> <span class="o">&lt;</span><span class="n">U</span> <span class="kd">extends</span> <span class="n">Unbinder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">U</span> <span class="n">createUnbinder</span><span class="o">(</span><span class="n">T</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">U</span><span class="o">)</span> <span class="k">new</span> <span class="n">Unbinder</span><span class="o">(</span><span class="n">target</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+  <span class="kd">protected</span> <span class="o">&lt;</span><span class="n">U</span> <span class="kd">extends</span> <span class="n">Unbinder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">U</span> <span class="n">accessUnbinder</span><span class="o">(</span><span class="n">T</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">U</span><span class="o">)</span> <span class="n">target</span><span class="o">.</span><span class="na">unbinder</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Unbinder</span><span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">SimpleActivity</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">ButterKnife</span><span class="o">.</span><span class="na">ViewUnbinder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">T</span> <span class="n">target</span><span class="o">;</span>
+
+    <span class="n">View</span> <span class="n">view2130968578</span><span class="o">;</span>
+
+    <span class="n">View</span> <span class="n">view2130968579</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">Unbinder</span><span class="o">(</span><span class="n">T</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="n">unbind</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">target</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">"Bindings already cleared."</span><span class="o">);</span>
+      <span class="n">unbind</span><span class="o">(</span><span class="n">target</span><span class="o">);</span>
+      <span class="n">target</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="n">unbind</span><span class="o">(</span><span class="n">T</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">subtitle</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">view2130968578</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+      <span class="n">view2130968578</span><span class="o">.</span><span class="na">setOnLongClickListener</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">hello</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="o">((</span><span class="n">AdapterView</span><span class="o">&lt;?&gt;)</span> <span class="n">view2130968579</span><span class="o">).</span><span class="na">setOnItemClickListener</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">listOfThings</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">footer</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">headerViews</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">target</span><span class="o">.</span><span class="na">unbinder</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="butterknifeviewdemohttpdownloadcsdnnetdetailyuanyang59179478759"><a href="http://download.csdn.net/detail/yuanyang5917/9478759">ButterKnifeView注入demo(简单易学)</a></h2>
+
+<blockquote>
+  <p>这个demo的代码生成，以及接口思想，以及调用生成代码的思想，都是借鉴ButterKnife的</p>
+</blockquote>
+
+<blockquote>
+  <p>我先简单实现了ButterKnife的View注入，去除了ButterKnife繁琐的编译校验，本篇也没有添加事件注入(下一篇会有)</p>
+</blockquote>
+
+<h3 id="xutils--butterknife">XUtils 与 ButterKnife实现方式的区别</h3>
+<p>上篇XUtils实现注解初始化用的是反射 +  动态代理</p>
+
+<blockquote>
+  <p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。</p>
+</blockquote>
+
+<h2 id="apt">APT</h2>
+<p>而ButterKnife使用的是APT (Annotation Processing Tool )
+&gt;apt是一个命令行工具，与之配套的还有一套用来描述程序语义结构的Mirror API。Mirror API（com.sun.mirror.*）描述的是程序在编译时刻的静态结构。通过Mirror API可以获取到被注解的Java类型元素的信息，从而提供相应的处理逻辑。具体的处理工作交给apt工具来完成。编写注解处理器的核心是AnnotationProcessorFactory和AnnotationProcessor两个接口。后者表示的是注解处理器，而前者则是为某些注解类型创建注解处理器的工厂。</p>
+
+<ol>
+  <li>
+    <p>APT配置
+需要再compiler Module中的main.resources.META-INF.services下新建文本java.annotation.processing.Processor，在文本内添加Processor全名(我的Processor是com.example.MyProcessor)
+或者直接在Processor实现类上@AutoService(Processor.class)(我还没实现成功)
+需要在build.gradle里面配置APT插件(classpath ‘com.neenbedankt.gradle.plugins:android-apt:1.8’)</p>
+  </li>
+  <li>
+    <p>Processor类
+(1)JAVA1.6以后的Processor实现类都需要extends AbstractProcessor
+(2)Processor类需要指定其处理的注解
+方式一(类上注解)：@SupportedAnnotationTypes(“com.example.AptBetter”)
+方式二(重写方法)：getSupportedAnnotationTypes
+(4)process方法，编译时进入的主方法，用于分析注解信息，以及生成代码
+(4)Processor都要指定版本
+一般获取最新的版本：</p>
+  </li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">SourceVersion</span> <span class="nf">getSupportedSourceVersion</span><span class="p">(</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">return</span> <span class="n">SourceVersion</span><span class="o">.</span><span class="na">latestSupported</span><span class="o">();</span>
+<span class="o">}</span></code></pre></figure>
+
+<ol>
+  <li>Process内部元素
+ProcessingEnvironment：编译环境</li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 用于生成代码</span>
+<span class="n">Filer</span> <span class="n">filer</span> <span class="o">=</span> <span class="n">processingEnv</span><span class="o">.</span><span class="na">getFiler</span><span class="o">();</span>
+<span class="c1">// 用于编译时给图</span>
+<span class="n">Messager</span> <span class="n">messager</span> <span class="o">=</span> <span class="n">processingEnv</span><span class="o">.</span><span class="na">getMessager</span><span class="o">();</span>
+<span class="c1">// Element工具，可以获取包名</span>
+<span class="n">Elements</span> <span class="n">elementUtils</span> <span class="o">=</span> <span class="n">processingEnv</span><span class="o">.</span><span class="na">getElementUtils</span><span class="o">();</span></code></pre></figure>
+
+<p>RoundEnvironment：回合环境(国内暂时没有固定的说法，暂且定义为元素环境)
+因为可以从中获取到5大Element</p>
+
+<figure class="highlight"><pre><code class="language-ios" data-lang="ios">Mirror的五大Element
+PackageElement 包元素
+TypeElement     类元素
+VariableElement  变量元素
+ExecutableElement  方法元素
+TypeParameterElement  参数元素
+通过这些元素，可以获取到元素的各种信息：注解、类型、名称等等</code></pre></figure>
+
+<p>其中TypeMirror.accept这个我还很模糊，有明白的请赐教</p>
+
+<ol>
+  <li>代码生成器
+这里有一个大杀器：JavaPoet (Java诗人) 也是Jake Wharton所参与的著作之一，膜拜Jake Wharthon，膜拜Square。大家可以直接到Github上搜索JavaPoet。</li>
+</ol>
+
+<h2 id="section">运行期流程</h2>
+
+<p><img src="http://img.blog.csdn.net/20160401155957286" alt="这里写图片描述" /></p>
+
+<p>主要是通过Butterknife调用生成的Activity$$ViewBinder类中的bind方法，实现了控件初始化、时间注入</p>
+
+<h3 id="question-">Question :</h3>
+<p>(1)在代码编写的时候类都还没有生成，那么如何获取其对象
+answer:通过反，Activity也是通过这种方式生成的</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">viewBindingClass</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">clsName</span> <span class="o">+</span> <span class="s">"$$ViewBinder"</span><span class="o">);</span>
+<span class="n">ViewBinder</span> <span class="n">viewBinder</span> <span class="o">=</span> <span class="o">(</span><span class="n">ViewBinder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;)</span> <span class="n">viewBindingClass</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span></code></pre></figure>
+
+<p>(2)如何能调用bind方法，如何能强转，因为生成的代码实现了ViewBinder接口，接口的力量啊！针对接口编程！</p>
+
+<h2 id="compiler">分析compiler</h2>
+
+<p>思路分析：
+（1）一个类、一个内部类生成一个同包下的名称相似的IOC容器类
+（2）一类中会有很多控件需要初始化，那么我们把一个类、一个内部类所提供的多个控件信息、类名、包名、id封装成一个Bean：BindingClass(ButterKnife除了可以给控件初始化之外，还可以给各种资源初始化，甚至可以解绑UnBinding，ButterKnife中把每种类型都封装成一种Bean，这里我们紧紧做了View的初始化),我们这里BindingClass里面仅仅放的是FieldViewBinding
+（3）一个需要初始化的类对应一个BindingClass(含有很多FieldViewBinding)，对应生成一个ViewBinder，那么生成代码的逻辑我们可以放在Compiler中的BindingClass，作为其内部类(可以直接获取BindingClass中的类名、包名、控件集合)</p>
+
+<p><img src="http://img.blog.csdn.net/20160404004902680" alt="这里写图片描述" /></p>
+
+<h2 id="section-1">编译器读信息</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 所有AptBetter的成员变量</span>
+        <span class="n">Set</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Element</span><span class="o">&gt;</span> <span class="n">elementsAnnotatedWith</span> <span class="o">=</span> <span class="n">roundEnv</span><span class="o">.</span><span class="na">getElementsAnnotatedWith</span><span class="o">(</span><span class="n">AptBetter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="c1">// 元素归类</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Element</span> <span class="n">element</span> <span class="o">:</span> <span class="n">elementsAnnotatedWith</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">TypeElement</span> <span class="n">typeElement</span> <span class="o">=</span> <span class="o">(</span><span class="n">TypeElement</span><span class="o">)</span> <span class="n">element</span><span class="o">.</span><span class="na">getEnclosingElement</span><span class="o">();</span>
+            <span class="n">BindingClass</span> <span class="n">bindingClass</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">allBindEvent</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">typeElement</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">bindingClass</span> <span class="o">=</span> <span class="n">allBindEvent</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">typeElement</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">String</span> <span class="n">targetType</span> <span class="o">=</span> <span class="n">typeElement</span><span class="o">.</span><span class="na">getQualifiedName</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+                <span class="n">String</span> <span class="n">classPackage</span> <span class="o">=</span> <span class="n">getPackageName</span><span class="o">(</span><span class="n">typeElement</span><span class="o">);</span>
+                <span class="c1">// packageName$className$$ViewBinder</span>
+                <span class="n">String</span> <span class="n">className</span> <span class="o">=</span> <span class="n">getClassName</span><span class="o">(</span><span class="n">typeElement</span><span class="o">,</span> <span class="n">classPackage</span><span class="o">)</span> <span class="o">+</span> <span class="n">SUFFIX</span><span class="o">;</span>
+
+                <span class="n">bindingClass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BindingClass</span><span class="o">(</span><span class="n">classPackage</span><span class="o">,</span> <span class="n">className</span><span class="o">,</span> <span class="n">targetType</span><span class="o">);</span>
+                <span class="n">allBindEvent</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">typeElement</span><span class="o">,</span> <span class="n">bindingClass</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">AptBetter</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">value</span><span class="o">();</span>
+            <span class="n">String</span> <span class="n">elementName</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+            <span class="n">TypeName</span> <span class="n">typeName</span> <span class="o">=</span> <span class="n">TypeName</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">asType</span><span class="o">());</span>
+            <span class="n">bindingClass</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="k">new</span> <span class="n">FieldViewBinding</span><span class="o">(</span><span class="n">elementName</span><span class="o">,</span> <span class="n">typeName</span><span class="o">,</span> <span class="n">value</span><span class="o">));</span>
+        <span class="o">}</span></code></pre></figure>
+
+<h2 id="javapoet">代码生成(JavaPoet)</h2>
+<p>这里是用的是JavaPoet，下面是教程地址：</p>
+
+<ul>
+  <li><a href="https://github.com/square/javapoet">JavaPoet In Github</a></li>
+  <li><a href="http://p.codekk.com/detail/Android/square/javapoet">JavaPoet博客教程</a></li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Technology Of Studying</title>
 	  <link>//technologyof-studying</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-31T00:00:00+08:00</pubDate>
 	  <guid>//technologyof-studying</guid>
 	  <description><![CDATA[
-	     <ul>
+	     <h2 id="studying">Studying</h2>
+<ul>
   <li>ButterKnife通过APT实现IOC的</li>
-  <li>潭州教育视频学习（VIP跟公开课）
+  <li>潭州教育视频学习
  [(1)ImageLoader架构解析
  (2)插件式开发
  (3)视察动画]</li>
   <li>高焕堂网易云公开课
  ——Android中运用到的设计模式
  [13 Kinds of Design Pattern in Android Framwork]</li>
+</ul>
+
+<h2 id="section">已学完</h2>
+<ul>
+  <li>XUtils控件注入实现[注解＋反射＋动态代理]</li>
 </ul>
 
 	  ]]></description>
