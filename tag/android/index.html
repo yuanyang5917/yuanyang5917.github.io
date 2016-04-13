@@ -94,7 +94,7 @@
             <h1 class="page-title">Android</h1>
             <h2 class="page-description">
             
-			    A 3-Article
+			    A 4-Article
             
             </h2>
         </div>
@@ -117,6 +117,30 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/butterknifedemo02">注解初始化控件(ButterKnife方式)<下></a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>一个星期没更新博客了，虽然目前博客很乱！最近比较忙，视力有些下降，不过ButterKnife的事件实现终算完成了！ ButterKnifeDemo实现(注解完善，方便阅读) 目标 之所以butterknife可以实现点击view的时候调用注解过的方法，其实是在点击的回调方法中调用目标类的相应注释过的方法： view.setOnClickListener(new DebouncingOnClickListener() { @Override public void doClick(View v) { target.click(v); } }); 拿我的demo为例，我们最终是要生成一个如下的类： 这里写代码片 package com.turbo.demo.apt; import android.view.View; import com.turbo.apt.library.internal.DebouncingOnClickListener; import com.turbo.apt.library.internal.Finder;... <a class="read-more" href="/butterknifedemo02">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-04-13">13 Apr 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">

@@ -12,6 +12,372 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>注解初始化控件(ButterKnife方式)<下></title>
+	  <link>//butterknifedemo02</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-04-13T00:00:00+08:00</pubDate>
+	  <guid>//butterknifedemo02</guid>
+	  <description><![CDATA[
+	     <p>一个星期没更新博客了，虽然目前博客很乱！最近比较忙，视力有些下降，不过ButterKnife的事件实现终算完成了！</p>
+
+<blockquote>
+  <h3 id="butterknifedemohttpdownloadcsdnnetdetailyuanyang59179489865"><a href="http://download.csdn.net/detail/yuanyang5917/9489865">ButterKnifeDemo实现(注解完善，方便阅读)</a></h3>
+</blockquote>
+
+<h2 id="section">目标</h2>
+<p>之所以butterknife可以实现点击view的时候调用注解过的方法，其实是在点击的回调方法中调用目标类的相应注释过的方法：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="n">view</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DebouncingOnClickListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="n">doClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">target</span><span class="o">.</span><span class="na">click</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span></code></pre></figure>
+
+<p>拿我的demo为例，我们最终是要生成一个如下的类：</p>
+
+<p>这里写代码片</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">turbo</span><span class="o">.</span><span class="na">demo</span><span class="o">.</span><span class="na">apt</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.turbo.apt.library.internal.DebouncingOnClickListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.turbo.apt.library.internal.Finder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.turbo.apt.library.internal.ViewBinder</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by LuckyTurbo on 16/4/11.
+ *
+ * 待生成的类
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity_ViewBinder</span><span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">MainActivity</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">ViewBinder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">bind</span><span class="o">(</span><span class="n">Finder</span> <span class="n">finder</span><span class="o">,</span> <span class="kd">final</span> <span class="n">T</span> <span class="n">target</span><span class="o">,</span> <span class="n">Object</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">View</span> <span class="n">view</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView</span><span class="o">,</span><span class="s">"textView 我 啊"</span><span class="o">);</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">textView</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView</span><span class="o">,</span><span class="s">"textView 我 啊"</span><span class="o">);</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">findRequiredView</span><span class="o">(</span><span class="n">source</span><span class="o">,</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">rightView</span><span class="o">,</span><span class="s">"rightView 我 啊"</span><span class="o">);</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">rightView</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="na">castView</span><span class="o">(</span><span class="n">view</span><span class="o">,</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">rightView</span><span class="o">,</span><span class="s">"rightView 我 啊"</span><span class="o">);</span>
+        <span class="n">view</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DebouncingOnClickListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="n">doClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">target</span><span class="o">.</span><span class="na">click</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>那么下面要做的就是收集各种注解数据，然后再根据这些数据生成最终的类。</p>
+
+<p>##收集数据
+绝大部分方法的数据都是从注解中获取的，那么我们如何设计注解呢？
+###注解设计分析
+需求：
+1.id
+2.设置方法 (example:setOnLongClickListener)
+3.接口类型 (android.view.View.OnLongClickListener)
+4.接口中的方法：
+1.方法名 (onLongClick)
+2.参数类型 (android.view.View)
+3.方法返回值 （boolean）</p>
+
+<p>这么多东西如果在每个注解里面都加上，想想都恶心，但是注解并没有继承这一说，但是我们可以在注解的基础上再进行注解，上层注解里面可以设定默认值，每次给上层注解填值就可以了
+——其实我们想要的就是规范，就是模版，其实就是针对规范编程</p>
+
+<p>下面看下主要的几个注解：</p>
+
+<ul>
+  <li>@OnClick</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">METHOD</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">CLASS</span><span class="o">)</span>
+<span class="nd">@ListenerClass</span><span class="o">(</span>
+        <span class="n">targetType</span> <span class="o">=</span> <span class="s">"android.view.View"</span><span class="o">,</span>
+        <span class="n">setter</span> <span class="o">=</span> <span class="s">"setOnClickListener"</span><span class="o">,</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="s">"com.turbo.apt.library.internal.DebouncingOnClickListener"</span><span class="o">,</span><span class="c1">// 这个是butterKnife中的防卡点击</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nd">@ListenerMethod</span><span class="o">(</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s">"doClick"</span><span class="o">,</span>
+                <span class="n">parameters</span> <span class="o">=</span> <span class="s">"android.view.View"</span><span class="o">,</span>
+                <span class="n">returnType</span> <span class="o">=</span> <span class="s">"void"</span>
+        <span class="o">)</span>
+<span class="o">)</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">OnClick</span> <span class="o">{</span>
+    <span class="c1">// ids annotation注解 奇怪没导入成功</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">value</span><span class="o">()</span> <span class="k">default</span> <span class="o">{</span><span class="n">View</span><span class="o">.</span><span class="na">NO_ID</span><span class="o">};</span>
+<span class="o">}</span></code></pre></figure>
+
+<ul>
+  <li>@ListenerClass</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">ANNOTATION_TYPE</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span><span class="c1">// 靠，获取注解的注解好像必需要使用runtime，不然取不到</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">ListenerClass</span> <span class="o">{</span>
+    <span class="c1">//    @ListenerClass(</span>
+    <span class="c1">//            targetType = "android.view.View",</span>
+    <span class="c1">//            setter = "setOnClickListener",</span>
+    <span class="c1">//            type = "butterknife.internal.DebouncingOnClickListener",</span>
+    <span class="c1">//            method = @ListenerMethod(</span>
+    <span class="c1">//                    name = "doClick",</span>
+    <span class="c1">//                    parameters = "android.view.View"</span>
+    <span class="c1">//            )</span>
+    <span class="c1">//    )</span>
+
+    <span class="c1">// 某view</span>
+    <span class="n">String</span> <span class="n">targetType</span><span class="o">();</span>
+    <span class="c1">// 设置方法的名称</span>
+    <span class="n">String</span> <span class="n">setter</span><span class="o">();</span>
+    <span class="c1">// 接口全称</span>
+    <span class="n">String</span> <span class="n">type</span><span class="o">();</span>
+    <span class="cm">/** Enum which declares the listener callback methods. Mutually exclusive to {@link #method()}. */</span>
+    <span class="c1">// 跟method互斥</span>
+    <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Enum</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">callbacks</span><span class="o">()</span> <span class="k">default</span> <span class="n">NONE</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
+    <span class="cm">/**
+     * Method data for single-method listener callbacks. Mutually exclusive with {@link #callbacks()}
+     * and an error to specify more than one value.
+     */</span>
+    <span class="n">ListenerMethod</span> <span class="n">method</span><span class="o">();</span>
+
+    <span class="c1">// callback的默认值</span>
+    <span class="kd">enum</span> <span class="n">NONE</span> <span class="o">{}</span>
+<span class="o">}</span></code></pre></figure>
+
+<ul>
+  <li>@ListenerMethod</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">FIELD</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">ListenerMethod</span> <span class="o">{</span>
+
+    <span class="c1">// listener 方法 的 名字</span>
+    <span class="n">String</span> <span class="n">name</span><span class="o">();</span>
+
+    <span class="c1">// 方法参数</span>
+    <span class="n">String</span><span class="o">[]</span> <span class="n">parameters</span><span class="o">()</span> <span class="k">default</span> <span class="o">{};</span>
+
+    <span class="c1">// 方法返回类型</span>
+    <span class="n">String</span> <span class="n">returnType</span><span class="o">()</span> <span class="k">default</span> <span class="s">"void"</span><span class="o">;</span>
+
+    <span class="cm">/** If {@link #returnType()} is not {@code void} this value is returned when no binding exists. */</span>
+    <span class="c1">// 如果returnType 不是void，就返回这个值</span>
+    <span class="n">String</span> <span class="n">defaultReturn</span><span class="o">()</span> <span class="k">default</span> <span class="s">"null"</span><span class="o">;</span>
+<span class="o">}</span></code></pre></figure>
+
+<h3 id="section-1">注解收集数据结构</h3>
+<p><img src="http://img.blog.csdn.net/20160413140458623" alt="这里写图片描述" /></p>
+
+<h3 id="section-2">注解收集数据逻辑</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">TypeElement</span><span class="o">,</span> <span class="n">VBinderBuilder</span><span class="o">&gt;</span> <span class="n">findAndParseTargets</span><span class="o">(</span><span class="n">RoundEnvironment</span> <span class="n">roundEnv</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchMethodException</span><span class="o">,</span> <span class="n">InvocationTargetException</span><span class="o">,</span> <span class="n">IllegalAccessException</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">TypeElement</span><span class="o">,</span> <span class="n">VBinderBuilder</span><span class="o">&gt;</span> <span class="n">vBinderBuilderMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">&lt;&gt;();</span>
+
+        <span class="c1">// 解析所有的@Bind 元素</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Element</span> <span class="n">element</span> <span class="o">:</span> <span class="n">roundEnv</span><span class="o">.</span><span class="na">getElementsAnnotatedWith</span><span class="o">(</span><span class="n">Bind</span><span class="o">.</span><span class="na">class</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">TypeElement</span> <span class="n">typeElement</span> <span class="o">=</span> <span class="o">(</span><span class="n">TypeElement</span><span class="o">)</span> <span class="n">element</span><span class="o">.</span><span class="na">getEnclosingElement</span><span class="o">();</span>
+            <span class="n">VBinderBuilder</span> <span class="n">builderClass</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">vBinderBuilderMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">typeElement</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">builderClass</span> <span class="o">=</span> <span class="n">vBinderBuilderMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">typeElement</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">String</span> <span class="n">targetType</span> <span class="o">=</span> <span class="n">typeElement</span><span class="o">.</span><span class="na">getQualifiedName</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+                <span class="n">String</span> <span class="n">classPackage</span> <span class="o">=</span> <span class="n">getPackageName</span><span class="o">(</span><span class="n">typeElement</span><span class="o">);</span>
+                <span class="c1">// packageName$className_ViewBinder</span>
+                <span class="n">String</span> <span class="n">className</span> <span class="o">=</span> <span class="n">getClassName</span><span class="o">(</span><span class="n">typeElement</span><span class="o">,</span> <span class="n">classPackage</span><span class="o">)</span> <span class="o">+</span> <span class="n">APTConfig</span><span class="o">.</span><span class="na">SUFFIX</span><span class="o">;</span>
+
+                <span class="n">builderClass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VBinderBuilder</span><span class="o">(</span><span class="n">classPackage</span><span class="o">,</span> <span class="n">className</span><span class="o">,</span> <span class="n">targetType</span><span class="o">);</span>
+                <span class="n">vBinderBuilderMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">typeElement</span><span class="o">,</span> <span class="n">builderClass</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">Bind</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">value</span><span class="o">();</span>
+            <span class="n">String</span> <span class="n">elementName</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+            <span class="n">TypeName</span> <span class="n">typeName</span> <span class="o">=</span> <span class="n">TypeName</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">asType</span><span class="o">());</span>
+            <span class="n">FieldViewBinding</span> <span class="n">fieldViewBinding</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FieldViewBinding</span><span class="o">(</span><span class="n">elementName</span><span class="o">,</span> <span class="n">typeName</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+            <span class="n">builderClass</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">fieldViewBinding</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 解析所有LISTENERS：方法上的事件注解</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Annotation</span><span class="o">&gt;</span> <span class="n">annotationClass</span> <span class="o">:</span> <span class="n">LISTENERS</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Element</span> <span class="n">element</span> <span class="o">:</span> <span class="n">roundEnv</span><span class="o">.</span><span class="na">getElementsAnnotatedWith</span><span class="o">(</span><span class="n">annotationClass</span><span class="o">))</span> <span class="o">{</span>
+                <span class="c1">// 方法元素</span>
+                <span class="n">ExecutableElement</span> <span class="n">executableElement</span> <span class="o">=</span> <span class="o">(</span><span class="n">ExecutableElement</span><span class="o">)</span> <span class="n">element</span><span class="o">;</span>
+                <span class="c1">// 类元素(持有者元素)</span>
+                <span class="n">TypeElement</span> <span class="n">enclosingElement</span> <span class="o">=</span> <span class="o">(</span><span class="n">TypeElement</span><span class="o">)</span> <span class="n">element</span><span class="o">.</span><span class="na">getEnclosingElement</span><span class="o">();</span>
+                <span class="c1">// 方法的注解对象</span>
+                <span class="n">Annotation</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">annotationClass</span><span class="o">);</span>
+                <span class="c1">// 注解的value方法</span>
+                <span class="n">Method</span> <span class="n">annotationValue</span> <span class="o">=</span> <span class="n">annotationClass</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">"value"</span><span class="o">);</span>
+                <span class="c1">// 获取注解的ids</span>
+                <span class="kt">int</span><span class="o">[]</span> <span class="n">ids</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">[])</span> <span class="n">annotationValue</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">annotation</span><span class="o">);</span>
+                <span class="c1">// 方法名称</span>
+                <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">executableElement</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+                <span class="c1">// 注解的注解</span>
+                <span class="n">ListenerClass</span> <span class="n">listenerClass</span> <span class="o">=</span> <span class="n">annotationClass</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">ListenerClass</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+                <span class="c1">// 注解注解的参数</span>
+                <span class="n">ListenerMethod</span> <span class="n">listenerMethod</span> <span class="o">=</span> <span class="n">listenerClass</span><span class="o">.</span><span class="na">method</span><span class="o">();</span>
+                <span class="c1">// 方法参数</span>
+                <span class="n">List</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">VariableElement</span><span class="o">&gt;</span> <span class="n">methodParameters</span> <span class="o">=</span> <span class="n">executableElement</span><span class="o">.</span><span class="na">getParameters</span><span class="o">();</span>
+
+                <span class="n">Parameter</span><span class="o">[]</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="na">NONE</span><span class="o">;</span>
+                <span class="c1">// 真实方法参数</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">methodParameters</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">parameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Parameter</span><span class="o">[</span><span class="n">methodParameters</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
+                    <span class="c1">// 注解的注解中的参数类型</span>
+                    <span class="n">String</span><span class="o">[]</span> <span class="n">parameterTypes</span> <span class="o">=</span> <span class="n">listenerMethod</span><span class="o">.</span><span class="na">parameters</span><span class="o">();</span>
+
+                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">methodParameters</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                        <span class="n">VariableElement</span> <span class="n">methodParameter</span> <span class="o">=</span> <span class="n">methodParameters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                        <span class="c1">// 方法参数</span>
+                        <span class="n">TypeMirror</span> <span class="n">methodParameterType</span> <span class="o">=</span> <span class="n">methodParameter</span><span class="o">.</span><span class="na">asType</span><span class="o">();</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">methodParameterType</span> <span class="k">instanceof</span> <span class="n">TypeVariable</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">TypeVariable</span> <span class="n">typeVariable</span> <span class="o">=</span> <span class="o">(</span><span class="n">TypeVariable</span><span class="o">)</span> <span class="n">methodParameterType</span><span class="o">;</span>
+                            <span class="n">methodParameterType</span> <span class="o">=</span> <span class="n">typeVariable</span><span class="o">.</span><span class="na">getUpperBound</span><span class="o">();</span>
+                            <span class="n">messager</span><span class="o">.</span><span class="na">printMessage</span><span class="o">(</span><span class="n">Diagnostic</span><span class="o">.</span><span class="na">Kind</span><span class="o">.</span><span class="na">ERROR</span><span class="o">,</span> <span class="o">((</span><span class="n">TypeVariable</span><span class="o">)</span> <span class="n">methodParameterType</span><span class="o">).</span><span class="na">asElement</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">());</span>
+                        <span class="o">}</span>
+                        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">parameterTypes</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                            <span class="c1">// 封装了真实参数的位置，类型</span>
+                            <span class="n">parameters</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Parameter</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">TypeName</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">methodParameterType</span><span class="o">));</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="c1">// name:方法名 parameters:方法参数parameter required:方法上是否有Optional注解（一般不会有，所以为true）</span>
+                <span class="c1">// 一般都是true，我们这里没有给注解设置Optional注解</span>
+                <span class="n">MethodViewBinding</span> <span class="n">methodViewBinding</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodViewBinding</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">parameters</span><span class="o">),</span> <span class="kc">true</span><span class="o">);</span>
+                <span class="n">VBinderBuilder</span> <span class="n">builderClass</span> <span class="o">=</span> <span class="n">getOrCreateTargetClass</span><span class="o">(</span><span class="n">vBinderBuilderMap</span><span class="o">,</span> <span class="n">enclosingElement</span><span class="o">);</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">id</span> <span class="o">:</span> <span class="n">ids</span><span class="o">){</span>
+                    <span class="n">builderClass</span><span class="o">.</span><span class="na">addMethod</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">listenerClass</span><span class="o">,</span><span class="n">listenerMethod</span><span class="o">,</span><span class="n">methodViewBinding</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">vBinderBuilderMap</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="viewbinder">ViewBinder绑定帮助类生成</h2>
+
+<p>根据上一篇的实现步骤，我们生成一个实现ViewBinder接口，及其方法，实现控件初始化的类已经不是一件难事，现在最大的困难就是如何通过JavaPoet实现类似下面的代码：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="n">view</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DebouncingOnClickListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="n">doClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">target</span><span class="o">.</span><span class="na">click</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span></code></pre></figure>
+
+<p>根据butterKnife代码我给出具体的解决步骤：
+以@OnLongClick为例：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// new DebouncingOnClickListener()</span>
+<span class="c1">// 这里就是一个空接口以及一个父类</span>
+<span class="n">TypeSpec</span><span class="o">.</span><span class="na">Builder</span> <span class="n">interfaceEventBuilder</span> <span class="o">=</span> <span class="n">TypeSpec</span><span class="o">.</span><span class="na">anonymousClassBuilder</span><span class="o">(</span><span class="s">""</span><span class="o">)</span>
+						<span class="o">.</span><span class="na">superclass</span><span class="o">(</span><span class="n">ClassName</span><span class="o">.</span><span class="na">bestGuess</span><span class="o">(</span><span class="n">keyListenerClass</span><span class="o">.</span><span class="na">type</span><span class="o">()));</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 这里代表的是 方法：public void doClick</span>
+<span class="n">MethodSpec</span><span class="o">.</span><span class="na">Builder</span> <span class="n">interfaceMethodBuilder</span> <span class="o">=</span> <span class="n">MethodSpec</span><span class="o">.</span><span class="na">methodBuilder</span><span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">name</span><span class="o">())</span>
+								<span class="o">.</span><span class="na">addAnnotation</span><span class="o">(</span><span class="n">Override</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+								<span class="o">.</span><span class="na">addModifiers</span><span class="o">(</span><span class="n">Modifier</span><span class="o">.</span><span class="na">PUBLIC</span><span class="o">)</span>
+								<span class="o">.</span><span class="na">returns</span><span class="o">(</span><span class="n">bestGuess</span><span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">returnType</span><span class="o">()));</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 第一个参数  是参数类型  第一个参数是参数名(p0 p1 p2 ...)</span>
+<span class="c1">// 方法中的参数(View v)</span>
+<span class="n">interfaceMethodBuilder</span><span class="o">.</span><span class="na">addParameter</span><span class="o">(</span><span class="n">bestGuess</span><span class="o">(</span><span class="n">parameterTypes</span><span class="o">[</span><span class="n">i</span><span class="o">]),</span> <span class="s">"p"</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 调用target的对应方法：target.click(v);</span>
+<span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"target.$L("</span><span class="o">,</span> <span class="n">methodViewBinding</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span></code></pre></figure>
+
+<p>整个方法的生成代码如下：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">addMethodBindings</span><span class="p">(</span><span class="n">MethodSpec</span><span class="o">.</span><span class="na">Builder</span> <span class="n">resultBuilder</span><span class="o">,</span> <span class="n">VBinderData</span> <span class="n">vbinderData</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">ListenerClass</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">ListenerMethod</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">MethodViewBinding</span><span class="o">&gt;&gt;&gt;</span> <span class="n">listenerMethodBindings</span> <span class="o">=</span> <span class="n">vbinderData</span><span class="o">.</span><span class="na">getMethodBindings</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">listenerMethodBindings</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">ListenerClass</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">ListenerMethod</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">MethodViewBinding</span><span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">entries</span> <span class="o">=</span> <span class="n">listenerMethodBindings</span><span class="o">.</span><span class="na">entrySet</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">ListenerClass</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">ListenerMethod</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">MethodViewBinding</span><span class="o">&gt;&gt;&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">entries</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ListenerClass</span> <span class="n">keyListenerClass</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+            <span class="n">Map</span><span class="o">&lt;</span><span class="n">ListenerMethod</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">MethodViewBinding</span><span class="o">&gt;&gt;</span> <span class="n">methodValue</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+            <span class="c1">// 创建接口实体类(空匿名类的接口父类)</span>
+            <span class="c1">// anonymous 匿名</span>
+            <span class="n">TypeSpec</span><span class="o">.</span><span class="na">Builder</span> <span class="n">interfaceEventBuilder</span> <span class="o">=</span> <span class="n">TypeSpec</span><span class="o">.</span><span class="na">anonymousClassBuilder</span><span class="o">(</span><span class="s">""</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">superclass</span><span class="o">(</span><span class="n">ClassName</span><span class="o">.</span><span class="na">bestGuess</span><span class="o">(</span><span class="n">keyListenerClass</span><span class="o">.</span><span class="na">type</span><span class="o">()));</span>
+            <span class="c1">// 根据ListenerClass 中的 参数 生成代码</span>
+            <span class="n">ListenerMethod</span> <span class="n">method</span> <span class="o">=</span> <span class="n">keyListenerClass</span><span class="o">.</span><span class="na">method</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">MethodSpec</span><span class="o">.</span><span class="na">Builder</span> <span class="n">interfaceMethodBuilder</span> <span class="o">=</span> <span class="n">MethodSpec</span><span class="o">.</span><span class="na">methodBuilder</span><span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">name</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">addAnnotation</span><span class="o">(</span><span class="n">Override</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">addModifiers</span><span class="o">(</span><span class="n">Modifier</span><span class="o">.</span><span class="na">PUBLIC</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">returns</span><span class="o">(</span><span class="n">bestGuess</span><span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">returnType</span><span class="o">()));</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">parameterTypes</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">parameters</span><span class="o">();</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">parameterTypes</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                    <span class="c1">// 第一个参数  是参数类型  第一个参数是参数名(p0 p1 p2 ...)</span>
+                    <span class="n">interfaceMethodBuilder</span><span class="o">.</span><span class="na">addParameter</span><span class="o">(</span><span class="n">bestGuess</span><span class="o">(</span><span class="n">parameterTypes</span><span class="o">[</span><span class="n">i</span><span class="o">]),</span> <span class="s">"p"</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+                <span class="o">}</span>
+
+                <span class="kt">boolean</span> <span class="n">hasReturnType</span> <span class="o">=</span> <span class="o">!</span><span class="s">"void"</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">returnType</span><span class="o">());</span>
+                <span class="c1">// 代码块</span>
+                <span class="n">CodeBlock</span><span class="o">.</span><span class="na">Builder</span> <span class="n">codeBuilder</span> <span class="o">=</span> <span class="n">CodeBlock</span><span class="o">.</span><span class="na">builder</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">hasReturnType</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"return "</span><span class="o">);</span>
+                <span class="o">}</span>
+
+                <span class="c1">// 一个id对应多个ListenerMethod</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">methodValue</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">method</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="k">for</span> <span class="o">(</span><span class="n">MethodViewBinding</span> <span class="n">methodViewBinding</span> <span class="o">:</span> <span class="n">methodValue</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">method</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="c1">// 调用target的对应方法</span>
+                        <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"target.$L("</span><span class="o">,</span> <span class="n">methodViewBinding</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+                        <span class="n">List</span><span class="o">&lt;</span><span class="n">Parameter</span><span class="o">&gt;</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">methodViewBinding</span><span class="o">.</span><span class="na">getParameters</span><span class="o">();</span>
+                        <span class="c1">// MethodListener注解的参数</span>
+                        <span class="n">String</span><span class="o">[]</span> <span class="n">methodParameters</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">parameters</span><span class="o">();</span>
+                        <span class="c1">// 优化了每次parameters.size()</span>
+                        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                                <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">", "</span><span class="o">);</span>
+                            <span class="o">}</span>
+                            <span class="n">Parameter</span> <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                            <span class="kt">int</span> <span class="n">listenerPosition</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="na">getListenerPosition</span><span class="o">();</span>
+                            <span class="c1">// 类型不一样，范型万能转换</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">requiresCast</span><span class="o">(</span><span class="n">methodParameters</span><span class="o">[</span><span class="n">i</span><span class="o">]))</span> <span class="o">{</span>
+                                <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"finder.&lt;$T&gt;castParam(p$L, $S, $L, $S, $L)\n"</span><span class="o">,</span> <span class="n">parameter</span><span class="o">.</span><span class="na">getType</span><span class="o">(),</span>
+                                        <span class="n">listenerPosition</span><span class="o">,</span> <span class="n">method</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="n">listenerPosition</span><span class="o">,</span> <span class="n">methodViewBinding</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">i</span><span class="o">);</span>
+                            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                                <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"p$L"</span><span class="o">,</span> <span class="n">listenerPosition</span><span class="o">);</span>
+                            <span class="o">}</span>
+                        <span class="o">}</span>
+                        <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">");\n"</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">hasReturnType</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">codeBuilder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"$L;\n"</span><span class="o">,</span> <span class="n">method</span><span class="o">.</span><span class="na">defaultReturn</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="n">interfaceMethodBuilder</span><span class="o">.</span><span class="na">addCode</span><span class="o">(</span><span class="n">codeBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+                <span class="n">interfaceEventBuilder</span><span class="o">.</span><span class="na">addMethod</span><span class="o">(</span><span class="n">interfaceMethodBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+            <span class="o">}</span>
+            <span class="c1">// 如果不是view类型，需要强转</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">APTConfig</span><span class="o">.</span><span class="na">VIEW_TYPE</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">keyListenerClass</span><span class="o">.</span><span class="na">targetType</span><span class="o">()))</span> <span class="o">{</span>
+                <span class="c1">// targetType不是view的时候需要强转</span>
+                <span class="n">resultBuilder</span><span class="o">.</span><span class="na">addStatement</span><span class="o">(</span><span class="s">"(($T) view).$L($L)"</span><span class="o">,</span> <span class="n">bestGuess</span><span class="o">(</span><span class="n">keyListenerClass</span><span class="o">.</span><span class="na">targetType</span><span class="o">()),</span>
+                        <span class="n">keyListenerClass</span><span class="o">.</span><span class="na">setter</span><span class="o">(),</span> <span class="n">interfaceEventBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// view.setOnClickListener(对象)</span>
+                <span class="n">resultBuilder</span><span class="o">.</span><span class="na">addStatement</span><span class="o">(</span><span class="s">"view.$L($L)"</span><span class="o">,</span> <span class="n">keyListenerClass</span><span class="o">.</span><span class="na">setter</span><span class="o">(),</span> <span class="n">interfaceEventBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>其他的具体步骤大家看下demo</p>
+
+<h2 id="section-3">总结</h2>
+<p>代码这个东西，看跟敲是两种体验，也是两种结果，以后会继续坚持，总结下从butterKnife框架细节中我学到的知识：</p>
+
+<ul>
+  <li>BitSet : java中提供的此神器用来记录我对一组数据的改动与否</li>
+  <li>@Retention(RUNTIME) ：注解的注解是需要runtime的，即便仅在编译期读取，RetentionPolicy.CLASS也是不奏效的，必需是RetentionPolicy.RUNTIME</li>
+  <li>for (int i = 0, count = parameters.size(); i &lt; count; i++) : 省去每次遍历调用parameters.size()的同时，又优雅的初始化了count并附上了想要的值(智慧而优雅)</li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>注解初始化控件(ButterKnife方式)<上></title>
 	  <link>//butterknifedemo01</link>
 	  <author>LuckyTurbo</author>
