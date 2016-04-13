@@ -68,9 +68,9 @@ public class MainActivity_ViewBinder<T extends MainActivity> implements ViewBind
 
 那么下面要做的就是收集各种注解数据，然后再根据这些数据生成最终的类。
 
-##收集数据
+## 收集数据
 绝大部分方法的数据都是从注解中获取的，那么我们如何设计注解呢？
-###注解设计分析
+### 注解设计分析
 需求：
 1.id
 2.设置方法 (example:setOnLongClickListener)
