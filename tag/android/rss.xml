@@ -1064,51 +1064,104 @@ http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文�
 	</item>
 
 	<item>
-	  <title>安卓开发清单</title>
-	  <link>//android-inventory</link>
+	  <title>技术进度</title>
+	  <link>//technolog-schedule</link>
 	  <author>LuckyTurbo</author>
 	  <pubDate>2016-03-21T00:00:00+08:00</pubDate>
-	  <guid>//android-inventory</guid>
+	  <guid>//technolog-schedule</guid>
 	  <description><![CDATA[
-	     <div class="highlighter-rouge"><pre class="highlight"><code>编程素养：
-        ——数据结构与算法
-        ——设计模式
+	     <h2 id="section">公司技术探索</h2>
+<ul>
+  <li>连击</li>
+  <li>连麦</li>
+  <li>单元测试</li>
+</ul>
 
-java基础：
-        ——多线程
-        ——反射
-        ——注解
-            ——APT
-        ——自定义类加载器
+<h2 id="studying">Studying</h2>
 
+<ul>
+  <li>潭州教育视频学习
+ [(1)ImageLoader架构解析
+ (2)插件式开发
+ (3)视差动画]</li>
+  <li>高焕堂网易云公开课
+ ——Android中运用到的设计模式
+ [13 Kinds of Design Pattern in Android Framwork]</li>
+</ul>
 
-android基础：
-        ——自定义view完全解析
-        ——动画种类跟原理
-        ——5.0材质设计
-        ——6.0权限管理
-        ——源码解读
-    
+<h2 id="section-1">已学完</h2>
+<ul>
+  <li>XUtils控件注入实现[注解＋反射＋动态代理]</li>
+  <li>ButterKnife通过APT实现IOC的</li>
+  <li>Android动画(5.0以下)</li>
+</ul>
 
-构架能力：
-        ——xutils／butterknife 两种初始化控件方式
-        ——Android单元测试
-        ——Android测试工具
-        ——图片OOM，Volley源码解读，demo功能实现
-        ——MVP nucleus简化mvp
-        ——REST接口
-        ——Gradle插件
-        ——大文件断点上传／下载（上传下载队列）
-        ——RxJava
-        ——React开发
-        ——Android插件话开发
-        ——Android混淆／加壳儿
-        ——dragger
-        ——增量升级
-        ——ViewBinding
-</code></pre>
-</div>
+<hr />
 
+<h3 id="section-2">学编程理念：</h3>
+
+<blockquote>
+  <ol>
+    <li>高效的开发环境</li>
+    <li>顺手的信息采集器和笔记本</li>
+    <li>开阔视野，研究各平台间的差异与共同趋势</li>
+    <li>学习一门新技术时，最大化它与你现有知识库的差异性</li>
+    <li>全栈工程师，最快的捷径就是打造一款自己的产品</li>
+    <li>Github上是否有出彩的项目、技术博客</li>
+    <li>编程理念»&gt;技术本身</li>
+    <li>优先学习思想、内力、公共基础</li>
+  </ol>
+</blockquote>
+
+<h3 id="section-3">编程基础：</h3>
+
+<ul>
+  <li>[ ] 数据结构与算法</li>
+  <li>[ ] 设计模式</li>
+</ul>
+
+<h3 id="java">java基础：</h3>
+
+<ul>
+  <li>[ ] 多线程</li>
+  <li>[x] 反射</li>
+  <li>[x] 注解
+    <ul>
+      <li>[x] APT</li>
+    </ul>
+  </li>
+  <li>[ ] 自定义类加载器</li>
+</ul>
+
+<h3 id="android">android基础：</h3>
+
+<ul>
+  <li>[ ] 自定义view完全解析</li>
+  <li>[x] 动画种类跟原理</li>
+  <li>[x] 5.0材质设计</li>
+  <li>[x] 6.0权限管理</li>
+  <li>[ ] 源码解读</li>
+</ul>
+
+<h3 id="section-4">构架能力：</h3>
+
+<ul>
+  <li>[x] xutils／butterknife 两种初始化控件方式</li>
+  <li>[ ] Android单元测试</li>
+  <li>[ ] Android测试工具</li>
+  <li>[ ] 图片OOM，Volley源码解读，demo功能实现</li>
+  <li>[ ] MVP nucleus简化mvp</li>
+  <li>[ ] REST接口</li>
+  <li>[ ] Gradle插件</li>
+  <li>[ ] 大文件断点上传／下载（上传下载队列）</li>
+  <li>[ ] RxJava</li>
+  <li>[ ] React开发</li>
+  <li>[ ] Android插件话开发</li>
+  <li>[ ] Android混淆／加壳儿</li>
+  <li>[ ] dragger</li>
+  <li>[ ] 增量升级</li>
+  <li>[ ] ViewBinding</li>
+</ul>
 
 	  ]]></description>
 	</item>
