@@ -11,7 +11,12 @@ categories: 'casper'
 logo: 'assets/images/ghost.png'
 ---
 
-这里暂时省略一万字......
 
-好漂亮的博客，谢谢Jasper，谢谢Glow技术团队
+安静的敲代码事件幸福的事情
+	———愿摆脱生计
+
+好漂亮的模版，谢谢Jasper，谢谢Glow技术团队
+
+邮箱：turboruby5917@gmail.com
+
 
