@@ -105,7 +105,7 @@
             <span class="author-location icon-location">苏州, China</span>
             <span class="author-link icon-link"><a href="http://yuanyang5917.github.io/">yuanyang5917.github.io/</a></span>
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <span class="author-stats"><i class="icon-stats"></i>7 posts</span>
+            <span class="author-stats"><i class="icon-stats"></i>8 posts</span>
         </div>
     </section>
 <!-- /author -->
@@ -128,6 +128,30 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/animation">Android动画(5.0以下)</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>使用Android两年多了，工作中的动画也动能应付，自认为Android中的动画自己也能用个八九不离十，结果我在学习Periscope点赞效果的时候发现动画的这些高级功能我从没用过、也没见过，静下来仔细想了下，我也并不明白Android动画的实现原理，以及生么时候用什么，从视频以及ApiDemo中看到的LayoutAnimator以及颜色渐变、类似弹簧的反复回弹也都没思路。于是我就研究了下Android的这些动画并记录了下来。 3.0以前，android支持两种动画模式,tween animation,frame animation，在3.0中又引入了一个新的动画系统：property animation，这三种动画模式在SDK中被称为property animation,view animation,drawable animation 1. View Animation（Tween Animation） View Animation(Tween Animation):补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。(xml方式是在anim文件夹中) View Animation只能用于View对象，而且职能支持一部分功能：位移(translate)、旋转(rotate)、缩放(scale)、透明度渐变(alpha) 还有一个局限性：对于View Animation，它只是改变了View对象绘制的位置，而没有改变View对象本身（例如：做一个位移动画，那么可点击的位置仅仅还是View开始所在的位置，跟移动中的这个动画并无关系） 实现原理：是父布局不断的画出一个外表一样的图像，不断的通过invalidate 去进行重绘，动画的算法其实都是在Transformation的Matrix矩阵中。 2. Drawable Animation（Frame Animation） Drawable... <a class="read-more" href="/animation">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-04-20">20 Apr 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -238,30 +262,6 @@
                 
             
             <time class="post-date" datetime="2016-03-31">31 Mar 2016</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/iocxutils">Android控件注解IOC注入(XUtils实现方式)</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>注解初始化控件(XUtils方式) DEMO链接地址 在第一次潭州教育的公开课上接触了这个框架的讲解，我动手研究了一下，结果一出手就停不下来，先后被我碰上了（Glow公司的技术博客——动态Android编程 ）、从几个大牛的博客（学到了github pages + Jekyll 免费制作博客网站） 我发现不写博客，很多东西就会忘记(代码如何上传到jcenter我已经忘记了) Just Do it!真的会有意想不到的收获！ 1. IOC概念介绍 http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文章学习的IOC概念的，写的浅显易懂 控件反转(IOC)：创建何种对象的控制权，转移到第三方 依赖注入(DI)：是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。 IOC与DI之间的关系：DI是一种IOC的具体思想，(编译运行期，动态注入依赖关系)；使用配置文件实现依赖关系的配置也是一种IOC思想（依赖拖拽）。 约定优于配置 这个是什么鬼？？ 依赖注入／依赖查找／依赖拖拽 依赖拖拽是通过对注入对象的集中配置实现的 依赖查找是在业务组件代码中进行的（EJB和Apache Avalon ） XUtils的实现方式XUtils实际上是通过... <a class="read-more" href="/iocxutils">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-03-29">29 Mar 2016</time>
         </footer>
     </article>
     

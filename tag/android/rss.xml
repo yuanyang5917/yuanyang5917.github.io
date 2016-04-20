@@ -12,6 +12,209 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Android动画(5.0以下)</title>
+	  <link>//animation</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-04-20T00:00:00+08:00</pubDate>
+	  <guid>//animation</guid>
+	  <description><![CDATA[
+	     <p>使用Android两年多了，工作中的动画也动能应付，自认为Android中的动画自己也能用个八九不离十，结果我在学习<a href="http://www.jianshu.com/p/03fdcfd3ae9c">Periscope点赞效果</a>的时候发现动画的这些高级功能我从没用过、也没见过，静下来仔细想了下，我也并不明白Android动画的实现原理，以及生么时候用什么，从视频以及ApiDemo中看到的LayoutAnimator以及颜色渐变、类似弹簧的反复回弹也都没思路。于是我就研究了下Android的这些动画并记录了下来。</p>
+
+<hr />
+
+<div class="highlighter-rouge"><pre class="highlight"><code>3.0以前，android支持两种动画模式,tween animation,frame animation，在3.0中又引入了一个新的动画系统：property animation，这三种动画模式在SDK中被称为property animation,view animation,drawable animation
+</code></pre>
+</div>
+
+<h1 id="view-animationtween-animation">1. View Animation（Tween Animation）</h1>
+
+<blockquote>
+  <p>View Animation(Tween Animation):补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。(xml方式是在anim文件夹中)</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>View Animation只能用于View对象，而且职能支持一部分功能：位移(translate)、旋转(rotate)、缩放(scale)、透明度渐变(alpha)</li>
+    <li>还有一个局限性：对于View Animation，它只是改变了View对象绘制的位置，而没有改变View对象本身（例如：做一个位移动画，那么可点击的位置仅仅还是View开始所在的位置，跟移动中的这个动画并无关系）</li>
+    <li><strong>实现原理</strong>：是父布局不断的画出一个外表一样的图像，不断的通过invalidate 去进行重绘，动画的算法其实都是在Transformation的Matrix矩阵中。</li>
+  </ul>
+</blockquote>
+
+<h1 id="drawable-animationframe-animation">2. Drawable Animation（Frame Animation）</h1>
+<p>Drawable Animation（Frame Animation）：帧动画，就像GIF图片，通过一系列Drawable依次显示来模拟动画的效果。(xml方式是在drawable中)</p>
+
+<p>Android中播放GIF图片的时候，可使用这种方式(先分解成单个图片)。</p>
+
+<h1 id="property-animation">3. Property Animation</h1>
+<p>Android 3.0引入，顾名思义，它是实际更改view的属性，而不像Tween Animation 仅仅是父布局绘制一个替身，所以Property Animation的功能会强大很多。(在包android.animation下)</p>
+
+<h3 id="section">相同：</h3>
+<p>Property Animation 兼容了 Tween Animation的所有功能：设置动画时间、支持(位移、旋转、缩放、透明度渐变)、类似的监听(开始、结束、取消、重复)、插补器
+### 加强功能：
+后浪推前浪，后出来的Property Animation带来了更强悍的功能：
+#### 1. Evaluators(计算器)：告诉Property Animation系统如何去计算属性值</p>
+
+<blockquote>
+  <ul>
+    <li>IntEvaluator:用于计算Int类型属性值的计算器。</li>
+    <li>FloatEvaluator:用于计算Float类型属性值的计算器。</li>
+    <li>ArgbEvaluator:用于计算以16进制形式表示的颜色值的计算器。</li>
+    <li>TypeEvaluator:一个计算器接口，它允许你创建你自己的计算器。如果你正在计算一个对象属性并不是int,float或者颜色值类型的，那么你必须实现TypeEvaluator接口去指定如何去计算对象的属性值。</li>
+  </ul>
+</blockquote>
+
+<h4 id="valueanimatoranimatorupdatelistener-">2. 新加了ValueAnimator.AnimatorUpdateListener 监听</h4>
+<p>　　onAnimationUpdate() - 在动画的每一帧上调用. 在这个方法中，你可以使用ValueAnimator的getAnimatedValue()方法来获取(Evaluators)计算出来的值。
+AnimationSet提供了一个把多个动画组合成一个组合的机制，并可设置组中动画的时序关系，如同时播放，顺序播放等。</p>
+
+<h4 id="view">3. 新增属性动画的同时，也新增了View的属性的设置获取方法</h4>
+<p>　Example：getLeft、getX、getTranslationX等等</p>
+
+<h4 id="animationset">4. 通过AnimationSet应用多个动画</h4>
+<p>　　以下例子同时应用5个动画：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>播放anim1；
+同时播放anim2,anim3,anim4；
+播放anim5。 　　
+</code></pre>
+</div>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="n">AnimatorSet</span> <span class="n">bouncer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AnimatorSet</span><span class="o">();</span>
+    <span class="n">bouncer</span><span class="o">.</span><span class="na">play</span><span class="o">(</span><span class="n">anim1</span><span class="o">).</span><span class="na">before</span><span class="o">(</span><span class="n">anim2</span><span class="o">);</span>
+    <span class="n">bouncer</span><span class="o">.</span><span class="na">play</span><span class="o">(</span><span class="n">anim2</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">anim3</span><span class="o">);</span>
+    <span class="n">bouncer</span><span class="o">.</span><span class="na">play</span><span class="o">(</span><span class="n">anim2</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">anim4</span><span class="o">)</span>
+    <span class="n">bouncer</span><span class="o">.</span><span class="na">play</span><span class="o">(</span><span class="n">anim5</span><span class="o">).</span><span class="na">after</span><span class="o">(</span><span class="n">amin2</span><span class="o">);</span>
+    <span class="n">animatorSet</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></figure>
+
+<h4 id="objectanimatorvalueanimator">5. ObjectAnimator与ValueAnimator之间的关系：</h4>
+<p>　　其实ObjectAnimator继承与ValueAnimator，ObjectAnimator是为了提供简便的方法，可以直接修改alpha、backgroundColor、translationX、x、y、width等，甚至是一个普通对象的属性，一言以蔽之如果直接通过属性名改属性就用ObjectAnimator</p>
+
+<blockquote>
+  <p>例子：<a href="http://www.jianshu.com/p/03fdcfd3ae9c">Periscope点赞效果实现</a>
+<img src="http://img.blog.csdn.net/20160419161534918" alt="这里写图片描述" /></p>
+</blockquote>
+
+<p>　　我又换了种方式实现了下，运用我们的属性动画，直接在ViewGroup上画出来：
+　　<img src="http://img.blog.csdn.net/20160420165151408" alt="这里写图片描述" /></p>
+
+<p>　　<a href="http://download.csdn.net/detail/yuanyang5917/9497167">代码传送门</a></p>
+
+<h4 id="section-1">6. 同一对象的多个属性同时变化可优化</h4>
+<p>　　如果需要对一个View的多个属性进行动画可以用ViewPropertyAnimator类，该类对多属性动画进行了优化，会合并一些invalidate()来减少刷新视图，该类在3.1中引入。</p>
+
+<p>　　以下两段代码实现同样的效果：　</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">PropertyValuesHolder</span> <span class="n">pvhX</span> <span class="o">=</span> <span class="n">PropertyValuesHolder</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="s">"x"</span><span class="o">,</span> <span class="mi">50</span><span class="n">f</span><span class="o">);</span>
+<span class="n">PropertyValuesHolder</span> <span class="n">pvhY</span> <span class="o">=</span> <span class="n">PropertyValuesHolder</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="s">"y"</span><span class="o">,</span> <span class="mi">100</span><span class="n">f</span><span class="o">);</span>
+<span class="n">ObjectAnimator</span><span class="o">.</span><span class="na">ofPropertyValuesHolder</span><span class="o">(</span><span class="n">myView</span><span class="o">,</span> <span class="n">pvhX</span><span class="o">,</span> <span class="n">pvyY</span><span class="o">).</span><span class="na">start</span><span class="o">();</span></code></pre></figure>
+
+<h4 id="evaluatorviewhandlerpostuiview">7. <strong>原理</strong>：异步根据插补器与Evaluator计算出当前View的属性，再通过handler.post到UI线程，通过反射给View设置当前属性。</h4>
+<p><a href="http://zhouyunan2010.iteye.com/blog/1972789">老版本的Property Animation原理讲解</a></p>
+
+<blockquote>
+  <h3 id="tween-animation--property-animation-">Tween Animation 与 Property Animation 使用选择：</h3>
+  <p>因为Property Animation最终跟新UI其实也需要重新绘图，所以，属性动画肯定比Tween Animation要更好性能得多，理论上流畅度也稍稍差点。
+<strong>所以建议能用Tween Animation的地方，还是使用Tween 动画。</strong></p>
+</blockquote>
+
+<hr />
+
+<h1 id="apidemo">根据ApiDemo罗列了以下几个实用场景（此处会有不少新的用法）：</h1>
+
+<h2 id="section-2">1. 颜色渐变</h2>
+
+<p><img src="http://img.blog.csdn.net/20160420095341051" alt="这里写图片描述" /></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">RED</span> <span class="o">=</span> <span class="mh">0xff</span><span class="n">FF8080</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">BLUE</span> <span class="o">=</span> <span class="mh">0xff8080</span><span class="n">FF</span><span class="o">;</span>
+
+<span class="n">ValueAnimator</span> <span class="n">colorAnim</span> <span class="o">=</span> <span class="n">ObjectAnimator</span><span class="o">.</span><span class="na">ofInt</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">"backgroundColor"</span><span class="o">,</span> <span class="n">RED</span><span class="o">,</span> <span class="n">BLUE</span><span class="o">);</span>
+    <span class="n">colorAnim</span><span class="o">.</span><span class="na">setDuration</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
+    <span class="n">colorAnim</span><span class="o">.</span><span class="na">setEvaluator</span><span class="o">(</span><span class="k">new</span> <span class="n">ArgbEvaluator</span><span class="o">());</span>
+    <span class="n">colorAnim</span><span class="o">.</span><span class="na">setRepeatCount</span><span class="o">(</span><span class="n">ValueAnimator</span><span class="o">.</span><span class="na">INFINITE</span><span class="o">);</span>
+    <span class="n">colorAnim</span><span class="o">.</span><span class="na">setRepeatMode</span><span class="o">(</span><span class="n">ValueAnimator</span><span class="o">.</span><span class="na">REVERSE</span><span class="o">);</span>
+    <span class="n">colorAnim</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></figure>
+
+<h2 id="layouttransition">2. 布局显示、不显示、隐藏(LayoutTransition)</h2>
+
+<p><img src="http://img.blog.csdn.net/20160420174213674" alt="这里写图片描述" />
+ViewGroup中的子元素可以通过setVisibility使其Visible、Invisible或Gone，当有子元素可见性改变时，可以向其应用动画，通过LayoutTransition类应用此类动画：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">transition</span><span class="o">.</span><span class="na">setAnimator</span><span class="o">(</span><span class="n">LayoutTransition</span><span class="o">.</span><span class="na">DISAPPEARING</span><span class="o">,</span> <span class="n">customDisappearingAnim</span><span class="o">);</span></code></pre></figure>
+
+<p>　　通过setAnimator应用动画，第一个参数表示应用的情境，可以以下4种类型：</p>
+
+<ul>
+  <li>APPEARING　　　　　　　　当一个元素变为Visible时对其应用的动画</li>
+  <li>CHANGE_APPEARING　　　当一个元素变为Visible时，因系统要重新布局有一些元素需要移动，这些要移动的元素应用的动画</li>
+  <li>DISAPPEARING　　　　　　当一个元素变为InVisible时对其应用的动画</li>
+  <li>CHANGE_DISAPPEARING　当一个元素变为Gone时，因系统要重新布局有一些元素需要移动，这些要移动的元素应用的动画 disappearing from the 
+container.</li>
+</ul>
+
+<blockquote>
+  <p>步骤：
+1. 给view设置LayoutTransition
+　 LayoutTransition mTransitioner = new LayoutTransition();
+　view.setLayoutTransition(mTransitioner);
+2. 设置对应时间
+　 Transitioner.setStagger(LayoutTransition.CHANGE_APPEARING, 500);
+3. 设置动画
+　ObjectAnimator changeIn = ObjectAnimator.ofPropertyValuesHolder(
+                        this, pvhLeft, pvhRight, pvhScaleX, pvhScaleY).
+                setDuration(mTransitioner.getDuration(LayoutTransition.CHANGE_APPEARING));
+        mTransitioner.setAnimator(LayoutTransition.CHANGE_APPEARING, changeIn);
+4.  搞定</p>
+</blockquote>
+
+<h2 id="keyframes">3. Keyframes</h2>
+<p>　 keyFrame是一个 时间/值 对，通过它可以定义一个在特定时间的特定状态，而且在两个keyFrame之间可以定义不同的Interpolator，就相当多个动画的拼接，第一个动画的结束点是第二个动画的开始点。KeyFrame是抽象类，要通过ofInt(),ofFloat(),ofObject()获得适当的KeyFrame，然后通过PropertyValuesHolder.ofKeyframe获得PropertyValuesHolder对象</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="n">Keyframe</span> <span class="n">kf0</span> <span class="o">=</span> <span class="n">Keyframe</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="mi">0</span><span class="n">f</span><span class="o">,</span> <span class="mi">0</span><span class="n">f</span><span class="o">);</span>
+    <span class="n">Keyframe</span> <span class="n">kf1</span> <span class="o">=</span> <span class="n">Keyframe</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(.</span><span class="mi">9999</span><span class="n">f</span><span class="o">,</span> <span class="mi">360</span><span class="n">f</span><span class="o">);</span>
+    <span class="n">Keyframe</span> <span class="n">kf2</span> <span class="o">=</span> <span class="n">Keyframe</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="mi">1</span><span class="n">f</span><span class="o">,</span> <span class="mi">0</span><span class="n">f</span><span class="o">);</span>
+    <span class="n">PropertyValuesHolder</span> <span class="n">pvhRotation</span> <span class="o">=</span>
+    <span class="n">PropertyValuesHolder</span><span class="o">.</span><span class="na">ofKeyframe</span><span class="o">(</span><span class="s">"rotation"</span><span class="o">,</span> <span class="n">kf0</span><span class="o">,</span> <span class="n">kf1</span><span class="o">,</span> <span class="n">kf2</span><span class="o">);</span>
+    <span class="kd">final</span> <span class="n">ObjectAnimator</span> <span class="n">changeOut</span> <span class="o">=</span> <span class="n">ObjectAnimator</span><span class="o">.</span><span class="na">ofPropertyValuesHolder</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">pvhLeft</span><span class="o">,</span> <span class="n">pvhRight</span><span class="o">,</span> <span class="n">pvhRotation</span><span class="o">).</span><span class="na">setDuration</span><span class="o">(</span><span class="n">mTransitioner</span><span class="o">.</span><span class="na">getDuration</span><span class="o">(</span><span class="n">LayoutTransition</span><span class="o">.</span><span class="na">CHANGE_DISAPPEARING</span><span class="o">));</span></code></pre></figure>
+
+<h2 id="section-3">4. 弹跳</h2>
+
+<p><img src="http://img.blog.csdn.net/20160420220757849" alt="这里写图片描述" />
+弹跳插补器：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">bounceAnim</span><span class="o">.</span><span class="na">setInterpolator</span><span class="o">(</span><span class="k">new</span> <span class="n">BounceInterpolator</span><span class="o">());</span></code></pre></figure>
+
+<p><img src="http://img.blog.csdn.net/20160420220818740" alt="这里写图片描述" />
+设置特定一个时间点，显示在那帧位置上</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">bounceAnim</span><span class="o">.</span><span class="na">setCurrentPlayTime</span><span class="o">(</span><span class="n">seekTime</span><span class="o">);</span></code></pre></figure>
+
+<h2 id="section-4">5. 反转切换布局</h2>
+<p><img src="http://img.blog.csdn.net/20160420221214985" alt="这里写图片描述" /></p>
+
+<p>其实就是一个旋转动画的拼接，一组对立的插补器(加速AccelerateInterpolator、减速DecelerateInterpolator)</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">ObjectAnimator</span> <span class="n">visToInvis</span> <span class="o">=</span> <span class="n">ObjectAnimator</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="n">visibleList</span><span class="o">,</span> <span class="s">"rotationY"</span><span class="o">,</span> <span class="mi">0</span><span class="n">f</span><span class="o">,</span> <span class="mi">90</span><span class="n">f</span><span class="o">);</span>
+        <span class="n">visToInvis</span><span class="o">.</span><span class="na">setDuration</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="n">visToInvis</span><span class="o">.</span><span class="na">setInterpolator</span><span class="o">(</span><span class="n">accelerator</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="n">ObjectAnimator</span> <span class="n">invisToVis</span> <span class="o">=</span> <span class="n">ObjectAnimator</span><span class="o">.</span><span class="na">ofFloat</span><span class="o">(</span><span class="n">invisibleList</span><span class="o">,</span> <span class="s">"rotationY"</span><span class="o">,</span>
+                <span class="o">-</span><span class="mi">90</span><span class="n">f</span><span class="o">,</span> <span class="mi">0</span><span class="n">f</span><span class="o">);</span>
+        <span class="n">invisToVis</span><span class="o">.</span><span class="na">setDuration</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="n">invisToVis</span><span class="o">.</span><span class="na">setInterpolator</span><span class="o">(</span><span class="n">decelerator</span><span class="o">);</span>
+        <span class="n">visToInvis</span><span class="o">.</span><span class="na">addListener</span><span class="o">(</span><span class="k">new</span> <span class="n">AnimatorListenerAdapter</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="n">onAnimationEnd</span><span class="o">(</span><span class="n">Animator</span> <span class="n">anim</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">visibleList</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">GONE</span><span class="o">);</span>
+                <span class="n">invisToVis</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+                <span class="n">invisibleList</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+        <span class="n">visToInvis</span><span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></figure>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>注解初始化控件(ButterKnife方式)<下></title>
 	  <link>//butterknifedemo02</link>
 	  <author>LuckyTurbo</author>
