@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Android内存分析之MAT
-date: 2016-04-23 00:00:00 +0800
+date: 2016-04-28 00:00:00 +0800
 cover: false
 tags: android
 subclass: 'post tag-fiction'

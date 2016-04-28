@@ -15,7 +15,7 @@
 	  <title>Android内存分析之MAT</title>
 	  <link>//memory-analyzer-tool</link>
 	  <author>LuckyTurbo</author>
-	  <pubDate>2016-04-23T00:00:00+08:00</pubDate>
+	  <pubDate>2016-04-28T00:00:00+08:00</pubDate>
 	  <guid>//memory-analyzer-tool</guid>
 	  <description><![CDATA[
 	     <p>　　面试中经常会问到内存优化，我们在开发过程中也多少会遇到OOM的问题，根据大牛们的博客，记录下我的学习思路</p>
