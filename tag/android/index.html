@@ -94,7 +94,7 @@
             <h1 class="page-title">Android</h1>
             <h2 class="page-description">
             
-			    A 6-Article
+			    A 7-Article
             
             </h2>
         </div>
@@ -119,6 +119,30 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/memory-analyzer-tool">Android内存分析之MAT</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>　　面试中经常会问到内存优化，我们在开发过程中也多少会遇到OOM的问题，根据大牛们的博客，记录下我的学习思路 一、为何会OOM？ 1. 一直以来Andorid手机的内存都比iPhone(iPhone6RAM1G)大的多，Android却经常出现OOM，这是为何？ 　 这个是因为Android系统对dalvik的vm heapsize 作了硬性限制，当java进程申请的java空间超过阀值时，就会抛出OOM异常(这个阀值可以是48M、24M、16M等，视机型而定)，可以通过adb shell getprop ｜ grep dalvik.vm.heapgrowthlimit查看此值。(我的一加2 Android6.0.1已经达到了256M) 　 也就是说，程序发生OOM并不表示RAM不足，而是因为程序申请的java heap对象超过了dalvik.vm.heapgrowthlimit。也就是说，在RAM充足的情况下，也可能发生OOM 　 这样的设计似乎有些不合理，但是Google为什么这样做呢？这样设计的目的是为了让Android系统能同时让比较多的进程常驻内存，这样程序启动时就不用每次都重新加载到内存，能够给用户更快的响应。迫使每个应用程序使用较小的内存，移动设备非常有限的RAM就能使比较多的app常驻其中。 2. 大型游戏如何在较小的heapsize上运行？ 创建子进程 创建一个新的进程，那么我们就可以把一些对象分配到新进程的heap上了，从而达到一个应用程序使用更多的内存的目的，当然，创建子进程会增加系统开销，而且并不是所有应用程序都适合这样做，视需求而定。 创建子进程的方法：使用android:process标签 使用jni在native heap上申请空间（推荐使用） nativeheap的增长并不受dalvik vm heapsize的限制，从图6可以看出这一点，它的native... <a class="read-more" href="/memory-analyzer-tool">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-04-23">23 Apr 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -213,30 +237,6 @@
                 
             
             <time class="post-date" datetime="2016-04-05">05 Apr 2016</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/iocxutils">Android控件注解IOC注入(XUtils实现方式)</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>注解初始化控件(XUtils方式) DEMO链接地址 在第一次潭州教育的公开课上接触了这个框架的讲解，我动手研究了一下，结果一出手就停不下来，先后被我碰上了（Glow公司的技术博客——动态Android编程 ）、从几个大牛的博客（学到了github pages + Jekyll 免费制作博客网站） 我发现不写博客，很多东西就会忘记(代码如何上传到jcenter我已经忘记了) Just Do it!真的会有意想不到的收获！ 1. IOC概念介绍 http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文章学习的IOC概念的，写的浅显易懂 控件反转(IOC)：创建何种对象的控制权，转移到第三方 依赖注入(DI)：是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。 IOC与DI之间的关系：DI是一种IOC的具体思想，(编译运行期，动态注入依赖关系)；使用配置文件实现依赖关系的配置也是一种IOC思想（依赖拖拽）。 约定优于配置 这个是什么鬼？？ 依赖注入／依赖查找／依赖拖拽 依赖拖拽是通过对注入对象的集中配置实现的 依赖查找是在业务组件代码中进行的（EJB和Apache Avalon ） XUtils的实现方式XUtils实际上是通过... <a class="read-more" href="/iocxutils">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-03-29">29 Mar 2016</time>
         </footer>
     </article>
     
