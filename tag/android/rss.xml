@@ -12,6 +12,139 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Handler机制解析</title>
+	  <link>//handler</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-05-11T00:00:00+08:00</pubDate>
+	  <guid>//handler</guid>
+	  <description><![CDATA[
+	     <blockquote>
+  <p>Handler机制是Android中最神奇的机制之一
+主要应用：
+1. 定时、延迟执行
+2. 跨页面传递数据发起事件
+3. 跨线程执行</p>
+</blockquote>
+
+<p>Handler机制分为：Handler、Loop、MessageQueue、Message四个类</p>
+
+<p>关系：一个Thread对应一个Loop，一个Loop对应一个MessageQueue,一个MessageQueue对应多个Message，一个Message对应一个Handler</p>
+
+<p>Handler关系类图:
+<img src="http://img.blog.csdn.net/20160511102249747" alt="Handler关系类图" /></p>
+
+<p>Handler运行流程图：
+<img src="http://img.blog.csdn.net/20160511103819289" alt="Handler运行流程图" /></p>
+
+<h1 id="question">Question：</h1>
+
+<h3 id="runnable-post">1.子线程是如何将runnable post到主线程运行的？</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code>答：其实在自线程中运行runnable.post方法，真正的作用：
+1. Message.obtion一个Message
+2. Message.callback = runnable ，将runnable赋值给message的callback变量
+3. 执行了MessageQueue.enqueueMessage方法，将此Message添加到Message通过next指针构成的列表头部(或者头部第二个)
+4. 调用nativeWake(mPtr);通知MessageQueue中的nativePollOnce(ptr, nextPollTimeoutMillis);苏醒
+5. 继续在他之前运行的线程中（这里是主线程）运行next（）抓取Message，交给Looper.loop
+6. loop调用Message对应Handler的dispatchMessage方法
+7. 调用Handler的handleCallback方法
+8. 最终执行message.callback.run()
+最终在主线程中跑完了这个runnable方法
+</code></pre>
+</div>
+
+<h3 id="looperloopermessagequeuenext">2.Looper.looper()、MessageQueue.next为何不会阻塞？</h3>
+<p>答：其实流程图已经给出了答案：</p>
+
+<p>　MessageQueue.next()方法会调用nativePollOnce(ptr, nextPollTimeoutMillis);进行休息，让本线程的其它逻辑先运行，发现有新的Message通过MessageQueue的enqueueMessage()方法添加，会调用nativeWake(mPtr);通知nativePollOnce(ptr, nextPollTimeoutMillis);苏醒继续执行。运行结束之后又会继续休息，循环往复</p>
+
+<h3 id="handler">3.handler为何会导致内存泄漏？如何避免？</h3>
+<p>　答：handler可以通过xxxdelay()方法，延迟dispatchMessage运行，如果在等待的这段时间相应Activity关闭掉，那么之前发出去的message内部还通过target持有handler对象，而handler为activity的内部成员，所以这段时间内activity会因为内部成员handler无法被释放而无法释放内存，故这段时间内会导致内存泄漏。</p>
+
+<p><strong>解决办法：handler.removeCallbacksAndMessages(null);</strong></p>
+
+<p>会调用MessageQueue的removeCallbacksAndMessages方法
+内部的逻辑是如果参数为null，那么会调用当前线程所有的Message的recycleUnchecked方法，此方法会将内部所有变成置空，等待垃圾回收器回收。</p>
+
+<h3 id="messagehandler">4.message为何不会分发到错误的handler？</h3>
+<p>　答：因为每个Message有一个target变量指定了其所需要运行的Handler</p>
+
+<h3 id="handler-1">5.子线程如何创建并使用handler？</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">looper</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.app.Activity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Handler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Looper</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Message</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="n">LooperThread</span>  <span class="n">looperThread</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">main</span><span class="o">);</span>
+        <span class="n">looperThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LooperThread</span><span class="o">();</span>
+        <span class="n">looperThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="n">looperThread</span><span class="o">.</span><span class="na">getHandler</span><span class="o">().</span><span class="na">sendEmptyMessage</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="kd">class</span> <span class="nc">LooperThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="n">Handler</span> <span class="n">mHandler</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">Object</span> <span class="n">mSync</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 自线程中需要手动Looper.prepare以及手动loop</span>
+        <span class="c1">// 需要注意的是：在创建Handler之前需要先执行Looper.prepare</span>
+            <span class="n">Looper</span><span class="o">.</span><span class="na">prepare</span><span class="o">();</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mSync</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">mHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">(){</span>
+                	<span class="nd">@Override</span>
+                	<span class="kd">public</span> <span class="kt">void</span> <span class="n">handleMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
+                		<span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"CYQ"</span><span class="o">,</span> <span class="s">"---&gt;"</span> <span class="o">+</span> <span class="n">msg</span><span class="o">);</span>
+                	<span class="o">}</span>
+                <span class="o">};</span>
+                <span class="n">mSync</span><span class="o">.</span><span class="na">notifyAll</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">Looper</span><span class="o">.</span><span class="na">loop</span><span class="o">();</span>
+        <span class="o">}</span>
+        
+        <span class="kd">public</span> <span class="n">Handler</span> <span class="n">getHandler</span><span class="o">()</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mSync</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">mHandler</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">mSync</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="n">mHandler</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="n">exit</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">getHandler</span><span class="o">().</span><span class="na">post</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(){</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="n">Looper</span><span class="o">.</span><span class="na">myLooper</span><span class="o">().</span><span class="na">quit</span><span class="o">();</span>
+                <span class="o">}});</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<blockquote>
+  <p>面试中还有时候会问：如何实现主线程向子线程发送消息?（上面的代码就是答案）</p>
+</blockquote>
+
+<blockquote>
+  <p>其实了解Handler机制之后，道理都一样的：
+　仅仅是在主线程中调用自线程的handler，发送消息，子线程自己会通过MessageQueue.next方法跑子线程的message</p>
+</blockquote>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Android内存分析之MAT</title>
 	  <link>//memory-analyzer-tool</link>
 	  <author>LuckyTurbo</author>
