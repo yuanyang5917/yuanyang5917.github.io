@@ -339,12 +339,11 @@
     <span class="o">}</span>
 <span class="o">}).</span><span class="na">when</span><span class="o">(</span><span class="n">mockUserManager</span><span class="o">).</span><span class="na">performLogin</span><span class="o">(</span><span class="n">anyString</span><span class="o">(),</span> <span class="n">anyString</span><span class="o">(),</span> <span class="n">any</span><span class="o">(</span><span class="n">NetworkCallback</span><span class="o">.</span><span class="na">class</span><span class="o">));</span></code></pre></figure>
 
-<p>　
-## 3. Hamcrest
-Assert.assertThat(object,Matcher.xxxmethod(yy));
-Matchers：匹配器 &gt; Espresso也基于此
-　
-## 4. Espresso</p>
+<h2 id="hamcrest">3. Hamcrest</h2>
+<p>Assert.assertThat(object,Matcher.xxxmethod(yy));
+Matchers：匹配器 &gt; Espresso也基于此</p>
+
+<h2 id="espresso">4. Espresso</h2>
 
 <h3 id="section-6">组成部分：</h3>
 <ul>
