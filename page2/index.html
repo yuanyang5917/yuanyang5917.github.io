@@ -109,13 +109,63 @@
             <a class="newer-posts" href="/" title="Previous Page">&laquo; Newer Posts</a>
         
     
-    <span class="page-number"> Page 2 of 2 </span>
+    <span class="page-number"> Page 2 of 3 </span>
+     
+        <a class="older-posts" href="/page3/" title="Next Page">Older Posts &raquo;</a>
      
 </nav>
         
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/animation">Android动画(5.0以下)</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>使用Android两年多了，工作中的动画也动能应付，自认为Android中的动画自己也能用个八九不离十，结果我在学习Periscope点赞效果的时候发现动画的这些高级功能我从没用过、也没见过，静下来仔细想了下，我也并不明白Android动画的实现原理，以及生么时候用什么，从视频以及ApiDemo中看到的LayoutAnimator以及颜色渐变、类似弹簧的反复回弹也都没思路。于是我就研究了下Android的这些动画并记录了下来。 3.0以前，android支持两种动画模式,tween animation,frame animation，在3.0中又引入了一个新的动画系统：property animation，这三种动画模式在SDK中被称为property animation,view animation,drawable animation 1. View Animation（Tween Animation） View Animation(Tween Animation):补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。(xml方式是在anim文件夹中) View Animation只能用于View对象，而且职能支持一部分功能：位移(translate)、旋转(rotate)、缩放(scale)、透明度渐变(alpha) 还有一个局限性：对于View Animation，它只是改变了View对象绘制的位置，而没有改变View对象本身（例如：做一个位移动画，那么可点击的位置仅仅还是View开始所在的位置，跟移动中的这个动画并无关系） 实现原理：是父布局不断的画出一个外表一样的图像，不断的通过invalidate 去进行重绘，动画的算法其实都是在Transformation的Matrix矩阵中。 2. Drawable Animation（Frame Animation） Drawable... <a class="read-more" href="/animation">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-04-20">20 Apr 2016</time>
+        </footer>
+    </article>
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/butterknifedemo02">注解初始化控件(ButterKnife方式)<下></a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>一个星期没更新博客了，虽然目前博客很乱！最近比较忙，视力有些下降，不过ButterKnife的事件实现终算完成了！ ButterKnifeDemo实现(注解完善，方便阅读) 目标 之所以butterknife可以实现点击view的时候调用注解过的方法，其实是在点击的回调方法中调用目标类的相应注释过的方法： view.setOnClickListener(new DebouncingOnClickListener() { @Override public void doClick(View v) { target.click(v); } }); 拿我的demo为例，我们最终是要生成一个如下的类： 这里写代码片 package com.turbo.demo.apt; import android.view.View; import com.turbo.apt.library.internal.DebouncingOnClickListener; import com.turbo.apt.library.internal.Finder;... <a class="read-more" href="/butterknifedemo02">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-04-13">13 Apr 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -189,30 +239,6 @@
         </footer>
     </article>
     
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/technolog-schedule">技术进度</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>公司技术探索 连击 连麦 单元测试 Studying 潭州教育视频学习 [(1)ImageLoader架构解析 (2)插件式开发 (3)视差动画] 高焕堂网易云公开课 ——Android中运用到的设计模式 [13 Kinds of Design Pattern in Android Framwork] 已学完 XUtils控件注入实现[注解＋反射＋动态代理] ButterKnife通过APT实现IOC的 Android动画(5.0以下) 学编程理念： 高效的开发环境 顺手的信息采集器和笔记本... <a class="read-more" href="/technolog-schedule">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-03-21">21 Mar 2016</time>
-        </footer>
-    </article>
-    
 
     <!-- Previous/next page links - displayed on every page -->
     
@@ -222,7 +248,9 @@
             <a class="newer-posts" href="/" title="Previous Page">&laquo; Newer Posts</a>
         
     
-    <span class="page-number"> Page 2 of 2 </span>
+    <span class="page-number"> Page 2 of 3 </span>
+     
+        <a class="older-posts" href="/page3/" title="Next Page">Older Posts &raquo;</a>
      
 </nav>
     

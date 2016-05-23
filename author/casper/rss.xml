@@ -12,6 +12,378 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Android单元测试<中>(Android官方MVP架构示例项目解析)</title>
+	  <link>//androidtu-2</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-05-23T00:00:00+08:00</pubDate>
+	  <guid>//androidtu-2</guid>
+	  <description><![CDATA[
+	     <blockquote>
+  <p><a href="http://www.jianshu.com/p/cf446be43ae8">解读Android官方MVP项目单元测试</a>分析得很到位
+——本篇以此为基础，有所补充</p>
+</blockquote>
+
+<blockquote>
+  <p>本文通过分析<a href="https://github.com/googlesamples/android-architecture">Android官方MVP项目</a>中最基础的<a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp/">todo-mvp/</a>示例项目，来归纳如何测试。（本篇不会介绍此Demo的逻辑、源码结构，请阅读代码之后再读此文）</p>
+</blockquote>
+
+<h1 id="presenter">一、测试Presenter层</h1>
+<p>这里只说主页面的TasksPresenter中的loadTasks方法(获取所有数据)
+<img src="http://img.blog.csdn.net/20160523104053928" alt="这里写图片描述" /></p>
+
+<p>从时序图上看，loadTask执行的逻辑是:</p>
+
+<ul>
+  <li>1.调用View层开启进度条</li>
+  <li>2.从Model层获取待办任务列表</li>
+  <li>3.Model层以回调函数的形式返回数据</li>
+  <li>4.调用View层关闭进度条</li>
+  <li>5.调用View层显示任务列表。</li>
+</ul>
+
+<p>这5个步骤里，每个步骤的逻辑是否准确是View层和Model层该测试的事情，对于Presenter层来讲，他的测试任务是确保这5个步骤如期调用。为了达成此目的，我们会采用Mockito.verify()的api进行测试，这个测试类是TasksPresenterTest，代码如下：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">loadAllTasksFromRepositoryAndLoadIntoView</span><span class="p">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 塞选当前展示数据是All视图状态</span>
+        <span class="n">mTasksPresenter</span><span class="o">.</span><span class="na">setFiltering</span><span class="o">(</span><span class="n">TasksFilterType</span><span class="o">.</span><span class="na">ALL_TASKS</span><span class="o">);</span>
+        <span class="c1">// 第0步：加载数据</span>
+        <span class="n">mTasksPresenter</span><span class="o">.</span><span class="na">loadTasks</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+        <span class="c1">// Callback is captured and invoked with stubbed tasks</span>
+        <span class="c1">// 第2步：验证mTasksRepository调用了getTasks，并将真实的LoadTasksCallback捕获到ArgumentCaptor&lt;T&gt;中</span>
+        <span class="n">verify</span><span class="o">(</span><span class="n">mTasksRepository</span><span class="o">).</span><span class="na">getTasks</span><span class="o">(</span><span class="n">mLoadTasksCallbackCaptor</span><span class="o">.</span><span class="na">capture</span><span class="o">());</span>
+        <span class="c1">// 第3步：调用捕获的回调参数，主动调用onTasksLoaded，并传入有效值</span>
+        <span class="n">mLoadTasksCallbackCaptor</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">onTasksLoaded</span><span class="o">(</span><span class="n">TASKS</span><span class="o">);</span>
+
+        <span class="c1">// Then progress indicator is shown</span>
+        <span class="c1">// 验证第1步：验证走了现实loading方法，进度条显示</span>
+        <span class="n">verify</span><span class="o">(</span><span class="n">mTasksView</span><span class="o">).</span><span class="na">setLoadingIndicator</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="c1">// Then progress indicator is hidden and all tasks are shown in UI</span>
+        <span class="c1">// 验证第4步：验证隐藏了loading，进度条关闭</span>
+        <span class="n">verify</span><span class="o">(</span><span class="n">mTasksView</span><span class="o">).</span><span class="na">setLoadingIndicator</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+        <span class="c1">// 这个也是参数捕获器</span>
+        <span class="n">ArgumentCaptor</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&gt;</span> <span class="n">showTasksArgumentCaptor</span> <span class="o">=</span> <span class="n">ArgumentCaptor</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="c1">// 验证第5步：View层显示待办任务列表，验证数据为之前预设的3条</span>
+        <span class="n">verify</span><span class="o">(</span><span class="n">mTasksView</span><span class="o">).</span><span class="na">showTasks</span><span class="o">(</span><span class="n">showTasksArgumentCaptor</span><span class="o">.</span><span class="na">capture</span><span class="o">());</span>
+        <span class="n">assertTrue</span><span class="o">(</span><span class="n">showTasksArgumentCaptor</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">3</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>总结：让Presenter充当个合格的皮条客，去调用其他两层的逻辑，在假设其他两层代码逻辑都是正确的前提下，做一些mock测试，尽可能覆盖所有逻辑路径。</p>
+
+<h1 id="view">二、测试View层</h1>
+
+<h2 id="section">知识补充：</h2>
+
+<h3 id="junit4rulehttpblogcsdnnetyqj2065articledetails40313577">1. <a href="http://blog.csdn.net/yqj2065/article/details/40313577">JUnit4中的@Rule完全解析</a></h3>
+<ul>
+  <li>@Rule是JUnit4的新特性。利用@Rule我们可以扩展JUnit的功能，在执行case的时候加入测试者特有的操作，而不影响原有的case代码：减小了特有操作和case原逻辑的耦合。</li>
+  <li>TestRule是一个工厂方法模式中的Creator角色——声明工厂方法。</li>
+  <li>由于工厂方法apply有参数base，因而TestRule将创建装饰模式中的装饰对象(Statement)。</li>
+  <li><img src="http://images.cnitblog.com/blog/141115/201310/26183706-239079e23eff4e7ebb62c36d86b27bc9.jpg" alt="这里写图片描述" /></li>
+</ul>
+
+<p><strong>AndroidJUnit4中的ActivityTestRule也是实现了TestRule，作用：</strong></p>
+
+<ul>
+  <li>执行每个@Test方法之前打开相应的Activity</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">startIntent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">ACTION_MAIN</span><span class="o">);</span>
+<span class="n">startIntent</span><span class="o">.</span><span class="na">setClassName</span><span class="o">(</span><span class="n">targetPackage</span><span class="o">,</span><span class="n">mActivityClass</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+<span class="n">startIntent</span><span class="o">.</span><span class="na">addFlags</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">FLAG_ACTIVITY_NEW_TASK</span><span class="o">);</span>
+<span class="n">mActivityClass</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="n">mInstrumentation</span><span class="o">.</span><span class="na">startActivitySync</span><span class="o">(</span><span class="n">startIntent</span><span class="o">));</span></code></pre></figure>
+
+<ul>
+  <li>扩展了一些方法，在Activity创建之前以及之后的相应方法</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">beforeActivityLaunched</span><span class="o">();</span>
+<span class="n">afterActivityLaunched</span><span class="o">();</span></code></pre></figure>
+
+<ul>
+  <li>确保模拟的操作均在UI线程中执行</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">getInstrumentation</span><span class="o">().</span><span class="na">runOnMainSync</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">mBase</span><span class="o">.</span><span class="na">evaluate</span><span class="o">();</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">exceptionRef</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">throwable</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">});</span></code></pre></figure>
+
+<h3 id="espresso">2.Espresso的测试等待异步结果机制</h3>
+
+<blockquote>
+  <p>开发者面临的挑战之一，是在编写UI测试时需要等待异步计算或I/O操作完成。这里使用Espresso测试框架来解决这个问题和学到的一些技巧。</p>
+</blockquote>
+
+<h4 id="idling-resourcehttpwwwjianshucomp95d075b90a2f"><strong><a href="http://www.jianshu.com/p/95d075b90a2f">Idling Resource</a></strong></h4>
+<p>Espresso引入了Idling Resource的概念，它是一个简单的接口：</p>
+
+<p>它代表了被测应用程序的资源，这个资源在测试执行时可以在后台异步工作。</p>
+
+<p>接口定义了三个方法：</p>
+
+<ul>
+  <li>getName()：必须返回代表idling resource的非空字符串；</li>
+  <li>isIdleNow()：返回当前idlingresource的idle状态。如果返回true，onTransitionToIdle()上注册的ResourceCallback必须必须在之前已经调用；</li>
+  <li>registerIdleTransitionCallback(IdlingResource.ResourceCallback callback)：通常此方法用于存储对回调的引用来通知idle状态的变化。</li>
+  <li>创建完自定义的idling resource后，需要通过调用Espresso.registerIdlingResource(webViewIdlingResource)与Espresso注册。</li>
+</ul>
+
+<p>总结：Idling Resource其实是Espresso的一个用来等待异步耗时操作的一个指示器(是否是空闲状态)、通知器(转为空闲状态时，通知Espresso)</p>
+
+<ul>
+  <li>先通过Espresso.registerIdlingResource在测试中将Idling Resource注册给Espresso</li>
+  <li>异步耗时操作之前调节自定义的Idling Resource中的参数，使得现在isIdleNow()返回false（即标记为非空闲状态）</li>
+  <li>异步耗时操作结束时，修改自定义的Idling Resource中的参数，使得现在isIdleNow()返回true（即标记为空闲状态）</li>
+  <li>再调用registerIdleTransitionCallback(ResourceCallback resourceCallback)，Espresso回调的ResourceCallback参数的onTransitionToIdle()方法，告知Espresso状态转到空闲</li>
+</ul>
+
+<h2 id="view-1">开启View层的测试</h2>
+
+<blockquote>
+  <p>其实View层的测试是从QA角度出发，以测试用例为基本单位，做得好甚至可以用Suite结合起来，做到自动化测试，Google下的绝大多数App其实都运用了这个测试框架进行UI测试。</p>
+</blockquote>
+
+<ul>
+  <li>第一步：测试哪个页面</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Rule</span>
+<span class="kd">public</span> <span class="n">ActivityTestRule</span><span class="o">&lt;</span><span class="n">TasksActivity</span><span class="o">&gt;</span> <span class="n">mTasksActivityTestRule</span> <span class="o">=</span>
+            <span class="k">new</span> <span class="n">ActivityTestRule</span><span class="o">&lt;</span><span class="n">TasksActivity</span><span class="o">&gt;(</span><span class="n">TasksActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span></code></pre></figure>
+
+<ul>
+  <li>第二步：给Espresso注册Idling Resource</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Before</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerIdlingResource</span><span class="p">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Espresso</span><span class="o">.</span><span class="na">registerIdlingResources</span><span class="o">(</span>
+                <span class="n">mTasksActivityTestRule</span><span class="o">.</span><span class="na">getActivity</span><span class="o">().</span><span class="na">getCountingIdlingResource</span><span class="o">());</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>实际代码中自定义的Idling Resource需要在特定地方进行标记</p>
+
+<ul>
+  <li>第三部开始测试</li>
+</ul>
+
+<p>站在QA的角度，我们想要验证待办任务列表时候，会设计以下的测试用例：
+<img src="http://img.blog.csdn.net/20160523105505951" alt="这里写图片描述" /></p>
+
+<p><a href="http://www.jianshu.com/p/cf446be43ae8">请点击此入口进入这部分内容</a></p>
+
+<p>总结：这一层的测试站在用户的角度，进行黑盒测试，在功能层面测试输入（用户操作）输出（用户得到的界面反馈），其实已经粗糙的覆盖了M和P的逻辑了，做好其实就是自动化测试了。</p>
+
+<h1 id="model">三、Model层的测试</h1>
+
+<p>这部分与UI无关，有部分Model层的逻辑，网络、数据库、本地文件等部分需要Android环境，所以：
+- Model纯逻辑部分：Local Test &gt; JUnit4 + Mockito + Hamcrest &gt; 存放test下
+- Model需要Android环境部分：AndroidJUnit4 &gt; 存放 androidTest 下</p>
+
+<p><a href="http://www.jianshu.com/p/cf446be43ae8">请点击此入口进入这部分内容</a></p>
+
+<p>这张图不得不盗用下
+<img src="http://img.blog.csdn.net/20160523113151289" alt="这里写图片描述" /></p>
+
+<p>Model层注意（Fake、门面模式）：</p>
+
+<ul>
+  <li>网络请求：不测试真实的网络请求，但提供了Fake供其他层调用测试，其实是面相接口的空实现。</li>
+  <li>封装的门面类：决定了数据的来源和去向是来自于本地数据库 or 网络 or 内存，此为真正对其他层暴露的Model类。此类不做数据准确性的验证，只做mock测试，验证覆盖路径。UT选型Junit+Mockito，代码存放于test中。</li>
+</ul>
+
+<h4 id="mvpdragger2dragger2">MVP模式少了Dragger2总不那么完美，下一篇结合Dragger2的单元测试会有点久</h4>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>Android单元测试<上></title>
+	  <link>//androidtu-1</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-05-23T00:00:00+08:00</pubDate>
+	  <guid>//androidtu-1</guid>
+	  <description><![CDATA[
+	     <blockquote>
+  <p>单元测试业界标准：
+<strong>MVP ＋  Junit4 ＋ Mockito ＋ Hamcrest ＋ Espresso ＋ Dragger2</strong></p>
+</blockquote>
+
+<h1 id="section">一、为何要做单元测试</h1>
+
+<ol>
+  <li>App持续集成的时候需要一个集成测试保障其正确性（正确性）</li>
+  <li>页面较复杂的时候，我们是否可以先测试业务逻辑的正确性（边开发边测试）</li>
+  <li>项目较大，编译缓慢，测试业务逻辑部分（测试速度大幅提高）</li>
+  <li>对代码结构、代码健壮性、代码可维护度都有很大提高</li>
+  <li>不用太担心修改代码后，会导致其它bug，单元测试集成测试会告诉我们</li>
+</ol>
+
+<p>other：<a href="http://chriszou.com">蘑菇街的哥们</a>说过：慢慢的你会发现，其实不是这样的，纯java的代码其实真不少，而且往往是核心的逻辑所在</p>
+
+<h1 id="section-1">二、测些什么</h1>
+
+<h2 id="section-2">代码结构：</h2>
+
+<p>Android中的MVC分层不清晰，我们更倾向于MVP，这里列举一些比较好的文章。</p>
+
+<ul>
+  <li><a href="http://mp.weixin.qq.com/s?__biz=MzA3ODg4MDk0Ng==&amp;mid=403539764&amp;idx=1&amp;sn=d30d89e6848a8e13d4da0f5639100e5f&amp;scene=0">Android官方MVP架构示例项目解析</a></li>
+  <li><a href="http://zjutkz.net/2016/04/13/%E9%80%89%E6%8B%A9%E6%81%90%E6%83%A7%E7%97%87%E7%9A%84%E7%A6%8F%E9%9F%B3%EF%BC%81%E6%95%99%E4%BD%A0%E8%AE%A4%E6%B8%85MVC%EF%BC%8CMVP%E5%92%8CMVVM/">选择恐惧症的福音！教你认清MVC，MVP和MVVM</a></li>
+  <li><a href="http://blog.chengdazhi.com/index.php/115">如何设计MVP中的Presentation层</a></li>
+</ul>
+
+<h2 id="section-3">测试框架：</h2>
+
+<h4 id="android">Android单元测试分为：</h4>
+<p><strong>Local Unit Tests (直接在JVM上进行测试):</strong>
+		　　1.Junit4
+		　　2.Mockito （最常用的Mock之一）
+		　　3.Hamcrest（增加JUnit的测试能力）
+		　　4.Robolectric（第三方：JVM中模拟Android）
+<strong>Instrumented Tests (需要借助仪器、模拟器测试):</strong>
+		　　1.AndroidJUnitRunner  （官方：InstrumentTestRunner升级版，支持Junit4，下面的UI测试框架需要与之结合使用）
+		　　2.Espresso （官方：测试单独App）
+		　　3.UI Automator （官方：跨进程测试(多App之间进行测试)）
+		　　4.Robotium（第三方：基于Android 原生的Instruments）
+		　　5.Appium （第三方：支持Android IOS自动化测试）</p>
+
+<ul>
+  <li>OS: Apple’s UIAutomation</li>
+  <li>Android 4.2+: Google’s UiAutomator</li>
+  <li>Android 2.3+: Google’s Instrumentation. (Instrumentation support is provided by bundling a separate project, Selendroid)</li>
+</ul>
+
+<h2 id="section-4">测些什么</h2>
+<ul>
+  <li>Local Tests 测试业务逻辑层、部分Model层</li>
+  <li>Instrumented Tests 测试UI，测试用例</li>
+  <li>测试方法的返回值</li>
+  <li>测试操作流程中方法的调用情况（是否调用？调用几次？被调用时传入的参数值）</li>
+</ul>
+
+<h1 id="section-5">三、测试准备</h1>
+
+<h2 id="junit4">1. Junit4</h2>
+<ul>
+  <li>Assert.assertXXX ：断言</li>
+  <li>参数化测试</li>
+  <li>@Suite.SuiteClasses</li>
+  <li><a href="https://github.com/junit-team/junit4/wiki/Rules">JUnit  Rules之Github</a></li>
+  <li><a href="http://blog.csdn.net/yqj2065/article/details/40313577">JUnit  Rules源码分析</a></li>
+</ul>
+
+<h2 id="mockitohttpchriszoucom20160429android-unit-testing-mockitohtml">2. <a href="http://chriszou.com/2016/04/29/android-unit-testing-mockito.html">Mockito</a></h2>
+<p>Mock的概念（Mockito.mock）：所谓的mock就是创建一个类的虚假的对象，在测试环境中，用来替换掉真实的对象，以达到两大目的：
+- 验证这个对象的某些方法的调用情况，调用了多少次，参数是什么等等
+- 指定这个对象的某些方法的行为，返回特定的值，或者是执行特定的动作
+- 注意：需要将Mock对象注入到需要测试的类中</p>
+
+<p>@RunWith(MockitoJUnitRunner.class)
+ @Mock &gt; (Mock出一个对象，此对象的方法调用并不会真正调用)
+ @Spy &gt; (Spy出的对象，调用其方法会真正执行)
+ @Captor &gt; (用于抓取被调用方法的参数，进行验证，也可以使用ArgumentCaptor  new出来)
+ @InjectMocks &gt; (只要在被测试类上标记@InjectMocks，Mockito就会自动将标记@Mock、@Spy等注解的属性值注入到被测试类中。)</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 抓取mock对象方法的参数进行验证：</span>
+<span class="c1">// 验证mTasksRepository对象调用了getTask，并且抓取此方法的第二个参数</span>
+<span class="n">verify</span><span class="o">(</span><span class="n">mTasksRepository</span><span class="o">).</span><span class="na">getTask</span><span class="o">(</span><span class="n">eq</span><span class="o">(</span><span class="n">testTask</span><span class="o">.</span><span class="na">getId</span><span class="o">()),</span> <span class="n">mGetTaskCallbackCaptor</span><span class="o">.</span><span class="na">capture</span><span class="o">());</span>
+
+<span class="c1">// 调用上一步抓取到的参数的onTaskLoaded方法</span>
+<span class="n">mGetTaskCallbackCaptor</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">onTaskLoaded</span><span class="o">(</span><span class="n">testTask</span><span class="o">);</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 预设mock对象某方法被调用时返回特定值：</span>
+<span class="n">Mockito</span><span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="n">searchSchoolFragmentView</span><span class="o">.</span><span class="na">isActive</span><span class="o">()).</span><span class="na">thenReturn</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 预设mock对象某方法被调用时执行doAnswer里面自定义的逻辑：</span>
+<span class="c1">// 也可以先</span>
+<span class="n">Mockito</span><span class="o">.</span><span class="na">doAnswer</span><span class="o">(</span><span class="k">new</span> <span class="n">Answer</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="n">answer</span><span class="o">(</span><span class="n">InvocationOnMock</span> <span class="n">invocation</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="c1">//这里可以获得传给performLogin的参数</span>
+        <span class="n">Object</span><span class="o">[]</span> <span class="n">arguments</span> <span class="o">=</span> <span class="n">invocation</span><span class="o">.</span><span class="na">getArguments</span><span class="o">();</span>
+
+        <span class="c1">//callback是第三个参数</span>
+        <span class="n">NetworkCallback</span> <span class="n">callback</span> <span class="o">=</span> <span class="o">(</span><span class="n">NetworkCallback</span><span class="o">)</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+        <span class="n">callback</span><span class="o">.</span><span class="na">onFailure</span><span class="o">(</span><span class="mi">500</span><span class="o">,</span> <span class="s">"Server error"</span><span class="o">);</span>
+        <span class="k">return</span> <span class="mi">500</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}).</span><span class="na">when</span><span class="o">(</span><span class="n">mockUserManager</span><span class="o">).</span><span class="na">performLogin</span><span class="o">(</span><span class="n">anyString</span><span class="o">(),</span> <span class="n">anyString</span><span class="o">(),</span> <span class="n">any</span><span class="o">(</span><span class="n">NetworkCallback</span><span class="o">.</span><span class="na">class</span><span class="o">));</span></code></pre></figure>
+
+<p>　
+## 3. Hamcrest
+Assert.assertThat(object,Matcher.xxxmethod(yy));
+Matchers：匹配器 &gt; Espresso也基于此
+　
+## 4. Espresso</p>
+
+<h3 id="section-6">组成部分：</h3>
+<ul>
+  <li>ViewMachers:寻找用来测试的View</li>
+  <li>ViewAction：发送交互事件</li>
+  <li>ViewAssertions：检测测试结果</li>
+</ul>
+
+<p>View Machers: withId、withHint、allof(withId(),withHint())…
+View Actions: click()、doubleClick()、pressBack()、openLick()…
+View Assertions: matches、not、isDisplayed…</p>
+
+<h3 id="section-7">线程安全保障：</h3>
+<p>Espresso测试有个很强大的地方是它在多个测试操作中是线程安全的。
+&gt; Espresso会等待当前进程的消息队列中的UI事件，并且在任何一个测试操作中会等待其中的AsyncTask结束才会执行下一个测试。这能够解决程序中大部分的线程同步问题。</p>
+
+<p>Espresso中有个API叫做<a href="http://www.jianshu.com/p/95d075b90a2f">registerIdlingResource</a>，它可以让你使用自定义的线程安全逻辑。（上面链接中有对registerIdlingResource详细讲解）</p>
+
+<h1 id="section-8">四、参考资料</h1>
+
+<p><a href="http://chriszou.com/">蘑菇街小创</a></p>
+
+<p><a href="http://www.chriszou.com/2016/04/13/android-unit-testing-start-from-what.html">Android单元测试</a></p>
+
+<p><a href="http://www.jianshu.com/p/cf446be43ae8">解读Android官方MVP项目单元测试</a></p>
+
+<p><a href="http://developer.android.com/intl/zh-tw/training/testing/start/index.html">Android官网测试文档</a></p>
+
+<p>dragger2:
+(一)<a href="http://www.jianshu.com/p/cd2c1c9f68d4">http://www.jianshu.com/p/cd2c1c9f68d4</a>
+(二)<a href="http://www.jianshu.com/p/1d42d2e6f4a5">http://www.jianshu.com/p/1d42d2e6f4a5</a>
+(三)<a href="http://www.jianshu.com/p/65737ac39c44">http://www.jianshu.com/p/65737ac39c44</a></p>
+
+<p><a href="http://www.cnblogs.com/tiantianbyconan/p/5092525.html">dragger2</a></p>
+
+<p><a href="https://github.com/googlesamples/android-testing">Android谷歌官方测试demo</a></p>
+
+<p><a href="http://www.vogella.com/tutorials/Mockito/article.html">Mockito讲解</a></p>
+
+<p><a href="http://hotdog.iteye.com/blog/search?query=Mockito">Mockito更详细讲解</a></p>
+
+<p><a href="http://blog.csdn.net/shandong_chu/article/details/47083753">Espresso</a></p>
+
+<p><a href="http://www.jianshu.com/p/95d075b90a2f">Espresso IdlingResource</a></p>
+
+<p><a href="https://github.com/Jude95/Beam">MVP快速开发框架Beam</a></p>
+
+<p><a href="https://github.com/konmik/nucleus">encleus简化MVP</a></p>
+
+<h1 id="androidmvphttpmpweixinqqcomsbizmza3odg4mdk0ngmid403539764idx1snd30d89e6848a8e13d4da0f5639100e5fscene0">五、下一篇文章以<a href="http://mp.weixin.qq.com/s?__biz=MzA3ODg4MDk0Ng==&amp;mid=403539764&amp;idx=1&amp;sn=d30d89e6848a8e13d4da0f5639100e5f&amp;scene=0">Android官方MVP架构示例项目解析</a>谈测试</h1>
+
+<h3 id="androidmvphttpwwwjianshucompcf446be43ae8"><a href="http://www.jianshu.com/p/cf446be43ae8">Android官方MVP项目单元测试</a>分析得很到位</h3>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Handler机制解析</title>
 	  <link>//handler</link>
 	  <author>LuckyTurbo</author>
@@ -1942,109 +2314,6 @@ http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文�
   </li>
 </ul>
 
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>技术进度</title>
-	  <link>//technolog-schedule</link>
-	  <author>LuckyTurbo</author>
-	  <pubDate>2016-03-21T00:00:00+08:00</pubDate>
-	  <guid>//technolog-schedule</guid>
-	  <description><![CDATA[
-	     <h2 id="section">公司技术探索</h2>
-<ul>
-  <li>连击</li>
-  <li>连麦</li>
-  <li>单元测试</li>
-</ul>
-
-<h2 id="studying">Studying</h2>
-
-<ul>
-  <li>潭州教育视频学习
- [(1)ImageLoader架构解析
- (2)插件式开发
- (3)视差动画]</li>
-  <li>高焕堂网易云公开课
- ——Android中运用到的设计模式
- [13 Kinds of Design Pattern in Android Framwork]</li>
-</ul>
-
-<h2 id="section-1">已学完</h2>
-<ul>
-  <li>XUtils控件注入实现[注解＋反射＋动态代理]</li>
-  <li>ButterKnife通过APT实现IOC的</li>
-  <li>Android动画(5.0以下)</li>
-</ul>
-
-<hr />
-
-<h3 id="section-2">学编程理念：</h3>
-
-<blockquote>
-  <ol>
-    <li>高效的开发环境</li>
-    <li>顺手的信息采集器和笔记本</li>
-    <li>开阔视野，研究各平台间的差异与共同趋势</li>
-    <li>学习一门新技术时，最大化它与你现有知识库的差异性</li>
-    <li>全栈工程师，最快的捷径就是打造一款自己的产品</li>
-    <li>Github上是否有出彩的项目、技术博客</li>
-    <li>编程理念»&gt;技术本身</li>
-    <li>优先学习思想、内力、公共基础</li>
-  </ol>
-</blockquote>
-
-<h3 id="section-3">编程基础：</h3>
-
-<ul>
-  <li>[ ] 数据结构与算法</li>
-  <li>[ ] 设计模式</li>
-</ul>
-
-<h3 id="java">java基础：</h3>
-
-<ul>
-  <li>[ ] 多线程</li>
-  <li>[x] 反射</li>
-  <li>[x] 注解
-    <ul>
-      <li>[x] APT</li>
-    </ul>
-  </li>
-  <li>[ ] 自定义类加载器</li>
-</ul>
-
-<h3 id="android">android基础：</h3>
-
-<ul>
-  <li>[ ] 自定义view完全解析</li>
-  <li>[x] 动画种类跟原理</li>
-  <li>[x] 5.0材质设计</li>
-  <li>[x] 6.0权限管理</li>
-  <li>[ ] 源码解读</li>
-</ul>
-
-<h3 id="section-4">构架能力：</h3>
-
-<ul>
-  <li>[x] xutils／butterknife 两种初始化控件方式</li>
-  <li>[ ] Android单元测试</li>
-  <li>[ ] Android测试工具</li>
-  <li>[ ] 图片OOM，Volley源码解读，demo功能实现</li>
-  <li>[ ] MVP nucleus简化mvp</li>
-  <li>[ ] REST接口</li>
-  <li>[ ] Gradle插件</li>
-  <li>[ ] 大文件断点上传／下载（上传下载队列）</li>
-  <li>[ ] RxJava</li>
-  <li>[ ] React开发</li>
-  <li>[ ] Android插件话开发</li>
-  <li>[ ] Android混淆／加壳儿</li>
-  <li>[ ] dragger</li>
-  <li>[ ] 增量升级</li>
-  <li>[ ] ViewBinding</li>
-</ul>
 
 	  ]]></description>
 	</item>

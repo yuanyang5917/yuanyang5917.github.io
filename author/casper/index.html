@@ -105,7 +105,7 @@
             <span class="author-location icon-location">苏州, China</span>
             <span class="author-link icon-link"><a href="http://yuanyang5917.github.io/">yuanyang5917.github.io/</a></span>
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <span class="author-stats"><i class="icon-stats"></i>9 posts</span>
+            <span class="author-stats"><i class="icon-stats"></i>11 posts</span>
         </div>
     </section>
 <!-- /author -->
@@ -119,7 +119,7 @@
         
             <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 2 </span>
+    <span class="page-number"> Page 1 of 3 </span>
      
         <a class="older-posts" href="/author/casper/page2/" title="Next Page">Older Posts &raquo;</a>
      
@@ -128,6 +128,54 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/androidtu-2">Android单元测试<中>(Android官方MVP架构示例项目解析)</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>解读Android官方MVP项目单元测试分析得很到位 ——本篇以此为基础，有所补充 本文通过分析Android官方MVP项目中最基础的todo-mvp/示例项目，来归纳如何测试。（本篇不会介绍此Demo的逻辑、源码结构，请阅读代码之后再读此文） 一、测试Presenter层 这里只说主页面的TasksPresenter中的loadTasks方法(获取所有数据) 从时序图上看，loadTask执行的逻辑是: 1.调用View层开启进度条 2.从Model层获取待办任务列表 3.Model层以回调函数的形式返回数据 4.调用View层关闭进度条 5.调用View层显示任务列表。 这5个步骤里，每个步骤的逻辑是否准确是View层和Model层该测试的事情，对于Presenter层来讲，他的测试任务是确保这5个步骤如期调用。为了达成此目的，我们会采用Mockito.verify()的api进行测试，这个测试类是TasksPresenterTest，代码如下： @Test public void loadAllTasksFromRepositoryAndLoadIntoView() { // 塞选当前展示数据是All视图状态 mTasksPresenter.setFiltering(TasksFilterType.ALL_TASKS); // 第0步：加载数据 mTasksPresenter.loadTasks(true); // Callback is... <a class="read-more" href="/androidtu-2">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-05-23">23 May 2016</time>
+        </footer>
+    </article>
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/androidtu-1">Android单元测试<上></a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>单元测试业界标准： MVP ＋ Junit4 ＋ Mockito ＋ Hamcrest ＋ Espresso ＋ Dragger2 一、为何要做单元测试 App持续集成的时候需要一个集成测试保障其正确性（正确性） 页面较复杂的时候，我们是否可以先测试业务逻辑的正确性（边开发边测试） 项目较大，编译缓慢，测试业务逻辑部分（测试速度大幅提高） 对代码结构、代码健壮性、代码可维护度都有很大提高 不用太担心修改代码后，会导致其它bug，单元测试集成测试会告诉我们 other：蘑菇街的哥们说过：慢慢的你会发现，其实不是这样的，纯java的代码其实真不少，而且往往是核心的逻辑所在 二、测些什么 代码结构： Android中的MVC分层不清晰，我们更倾向于MVP，这里列举一些比较好的文章。 Android官方MVP架构示例项目解析 选择恐惧症的福音！教你认清MVC，MVP和MVVM 如何设计MVP中的Presentation层 测试框架：... <a class="read-more" href="/androidtu-1">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-05-23">23 May 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -201,60 +249,12 @@
         </footer>
     </article>
     
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/animation">Android动画(5.0以下)</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>使用Android两年多了，工作中的动画也动能应付，自认为Android中的动画自己也能用个八九不离十，结果我在学习Periscope点赞效果的时候发现动画的这些高级功能我从没用过、也没见过，静下来仔细想了下，我也并不明白Android动画的实现原理，以及生么时候用什么，从视频以及ApiDemo中看到的LayoutAnimator以及颜色渐变、类似弹簧的反复回弹也都没思路。于是我就研究了下Android的这些动画并记录了下来。 3.0以前，android支持两种动画模式,tween animation,frame animation，在3.0中又引入了一个新的动画系统：property animation，这三种动画模式在SDK中被称为property animation,view animation,drawable animation 1. View Animation（Tween Animation） View Animation(Tween Animation):补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。(xml方式是在anim文件夹中) View Animation只能用于View对象，而且职能支持一部分功能：位移(translate)、旋转(rotate)、缩放(scale)、透明度渐变(alpha) 还有一个局限性：对于View Animation，它只是改变了View对象绘制的位置，而没有改变View对象本身（例如：做一个位移动画，那么可点击的位置仅仅还是View开始所在的位置，跟移动中的这个动画并无关系） 实现原理：是父布局不断的画出一个外表一样的图像，不断的通过invalidate 去进行重绘，动画的算法其实都是在Transformation的Matrix矩阵中。 2. Drawable Animation（Frame Animation） Drawable... <a class="read-more" href="/animation">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-04-20">20 Apr 2016</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/butterknifedemo02">注解初始化控件(ButterKnife方式)<下></a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>一个星期没更新博客了，虽然目前博客很乱！最近比较忙，视力有些下降，不过ButterKnife的事件实现终算完成了！ ButterKnifeDemo实现(注解完善，方便阅读) 目标 之所以butterknife可以实现点击view的时候调用注解过的方法，其实是在点击的回调方法中调用目标类的相应注释过的方法： view.setOnClickListener(new DebouncingOnClickListener() { @Override public void doClick(View v) { target.click(v); } }); 拿我的demo为例，我们最终是要生成一个如下的类： 这里写代码片 package com.turbo.demo.apt; import android.view.View; import com.turbo.apt.library.internal.DebouncingOnClickListener; import com.turbo.apt.library.internal.Finder;... <a class="read-more" href="/butterknifedemo02">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-04-13">13 Apr 2016</time>
-        </footer>
-    </article>
-    
 
     <!-- Previous/next page links - displayed on every page -->
     
         <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 2 </span>
+    <span class="page-number"> Page 1 of 3 </span>
      
         <a class="older-posts" href="/author/casper/page2/" title="Next Page">Older Posts &raquo;</a>
      
