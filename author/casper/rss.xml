@@ -184,9 +184,12 @@
 
 <h1 id="model">三、Model层的测试</h1>
 
-<p>这部分与UI无关，有部分Model层的逻辑，网络、数据库、本地文件等部分需要Android环境，所以：
-- Model纯逻辑部分：Local Test &gt; JUnit4 + Mockito + Hamcrest &gt; 存放test下
-- Model需要Android环境部分：AndroidJUnit4 &gt; 存放 androidTest 下</p>
+<p>这部分与UI无关，有部分Model层的逻辑，网络、数据库、本地文件等部分需要Android环境，所以：</p>
+
+<ul>
+  <li>Model纯逻辑部分：Local Test &gt; JUnit4 + Mockito + Hamcrest &gt; 存放test下</li>
+  <li>Model需要Android环境部分：AndroidJUnit4 &gt; 存放 androidTest 下</li>
+</ul>
 
 <p><a href="http://www.jianshu.com/p/cf446be43ae8">请点击此入口进入这部分内容</a></p>
 
@@ -290,16 +293,25 @@
 </ul>
 
 <h2 id="mockitohttpchriszoucom20160429android-unit-testing-mockitohtml">2. <a href="http://chriszou.com/2016/04/29/android-unit-testing-mockito.html">Mockito</a></h2>
-<p>Mock的概念（Mockito.mock）：所谓的mock就是创建一个类的虚假的对象，在测试环境中，用来替换掉真实的对象，以达到两大目的：
-- 验证这个对象的某些方法的调用情况，调用了多少次，参数是什么等等
-- 指定这个对象的某些方法的行为，返回特定的值，或者是执行特定的动作
-- 注意：需要将Mock对象注入到需要测试的类中</p>
 
-<p>@RunWith(MockitoJUnitRunner.class)
- @Mock &gt; (Mock出一个对象，此对象的方法调用并不会真正调用)
- @Spy &gt; (Spy出的对象，调用其方法会真正执行)
- @Captor &gt; (用于抓取被调用方法的参数，进行验证，也可以使用ArgumentCaptor  new出来)
- @InjectMocks &gt; (只要在被测试类上标记@InjectMocks，Mockito就会自动将标记@Mock、@Spy等注解的属性值注入到被测试类中。)</p>
+<p>Mock的概念（Mockito.mock）：
+所谓的mock就是创建一个类的虚假的对象，在测试环境中，用来替换掉真实的对象，以达到两大目的：</p>
+
+<ul>
+  <li>验证这个对象的某些方法的调用情况，调用了多少次，参数是什么等等</li>
+  <li>指定这个对象的某些方法的行为，返回特定的值，或者是执行特定的动作</li>
+  <li>注意：需要将Mock对象注入到需要测试的类中</li>
+</ul>
+
+<p>相应注解：</p>
+
+<ol>
+  <li>@RunWith(MockitoJUnitRunner.class)</li>
+  <li>@Mock &gt; (Mock出一个对象，此对象的方法调用并不会真正调用)</li>
+  <li>@Spy &gt; (Spy出的对象，调用其方法会真正执行)</li>
+  <li>@Captor &gt; (用于抓取被调用方法的参数，进行验证，也可以使用ArgumentCaptor  new出来)</li>
+  <li>@InjectMocks &gt; (只要在被测试类上标记@InjectMocks，Mockito就会自动将标记@Mock、@Spy等注解的属性值注入到被测试类中。)</li>
+</ol>
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 抓取mock对象方法的参数进行验证：</span>
 <span class="c1">// 验证mTasksRepository对象调用了getTask，并且抓取此方法的第二个参数</span>
@@ -341,9 +353,13 @@ Matchers：匹配器 &gt; Espresso也基于此
   <li>ViewAssertions：检测测试结果</li>
 </ul>
 
-<p>View Machers: withId、withHint、allof(withId(),withHint())…
-View Actions: click()、doubleClick()、pressBack()、openLick()…
-View Assertions: matches、not、isDisplayed…</p>
+<p>示例：</p>
+
+<ol>
+  <li>View Machers: withId、withHint、allof(withId(),withHint())…</li>
+  <li>View Actions: click()、doubleClick()、pressBack()、openLick()…</li>
+  <li>View Assertions: matches、not、isDisplayed…</li>
+</ol>
 
 <h3 id="section-7">线程安全保障：</h3>
 <p>Espresso测试有个很强大的地方是它在多个测试操作中是线程安全的。
