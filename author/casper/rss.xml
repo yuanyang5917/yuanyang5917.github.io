@@ -12,6 +12,118 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Mac上JNI入门</title>
+	  <link>//jni-study</link>
+	  <author>LuckyTurbo</author>
+	  <pubDate>2016-05-25T00:00:00+08:00</pubDate>
+	  <guid>//jni-study</guid>
+	  <description><![CDATA[
+	     <blockquote>
+  <p>入手Mac不久
+命令环境设置、文件权限修改 都不熟
+这里记录下实现hello-jni的步骤，方便以后查阅</p>
+</blockquote>
+
+<h2 id="ndk">一、NDK下载</h2>
+<p>当前AndroidStudio中已有集成：android-sdk-macosx/ndk-bundle
+<a href="https://developer.android.com/ndk/downloads/index.html">没有点此下载官方最新版</a></p>
+
+<h2 id="ndk-build">二、ndk-build环境配置</h2>
+<p>跟Window一样，Mac也需要设置环境
+需要在bash_profile文件中进行设置：</p>
+
+<ol>
+  <li>pico .bash_profile进入命令行（关闭：先 control+x 再 y）
+ 　或者open .bash_profile打开文件</li>
+  <li>添加命令：
+export NDK_ROOT=/Users/LuckyTurbo/Documents/android-sdk-macosx/ndk-bundle
+export PATH=$PATH:$NDK_ROOT/</li>
+  <li>特别注意：source .bash_profile刷新刚配置的环境
+开始设置了好多遍，都无效，蛋疼死了</li>
+  <li>最后输入ndk-build,验证是否配制成功</li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">export</span> <span class="n">NDK_ROOT</span><span class="o">=/</span><span class="n">Users</span><span class="o">/</span><span class="n">LuckyTurbo</span><span class="o">/</span><span class="n">Documents</span><span class="o">/</span><span class="n">android</span><span class="o">-</span><span class="n">sdk</span><span class="o">-</span><span class="n">macosx</span><span class="o">/</span><span class="n">ndk</span><span class="o">-</span><span class="n">bundle</span>
+<span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="n">$PATH</span><span class="o">:</span><span class="n">$NDK_ROOT</span><span class="o">/</span></code></pre></figure>
+
+<h2 id="jni-demohttpsgithubcomgooglesamplesandroid-ndktreeandroid-mk">三、<a href="https://github.com/googlesamples/android-ndk/tree/android-mk">谷歌JNI Demo下载</a></h2>
+
+<h2 id="jni">四、JNI的实现流程</h2>
+<p><img src="http://img.blog.csdn.net/20160525123834164" alt="这里写图片描述" /></p>
+
+<ol>
+  <li>*.java -&gt; *.class 使用Eclipse直接编译，会在/bin/classes中</li>
+  <li>*.class -&gt; *.h 使用java命令：</li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// javah命令介绍</span>
+<span class="n">javah</span> <span class="o">-</span><span class="n">classpath</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="o">:</span><span class="err">从中加载类的路径</span>
+<span class="n">javah</span> <span class="o">-</span><span class="n">d</span> <span class="o">&lt;</span><span class="n">dir</span><span class="o">&gt;</span> <span class="o">:</span><span class="err">输出目录</span></code></pre></figure>
+
+<p>　
+　（1） 创建jni目录
+　（2）进入到当前项目目录下
+　</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">javah</span> <span class="o">-</span><span class="n">classpath</span> <span class="n">bin</span><span class="o">/</span><span class="nl">classes:</span><span class="n">somtime</span><span class="o">/</span><span class="n">android</span><span class="o">.</span><span class="na">jar</span>  <span class="o">-</span><span class="n">d</span> <span class="n">jni</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">jnitest</span><span class="o">.</span><span class="na">MainActivity</span></code></pre></figure>
+
+<blockquote>
+  <p>注意：</p>
+
+  <p>用mac或linux系统:要写成javah -classpath bin/classes:/home/xxx/android-sdk-linux/platforms/android-21/android.jar -d jni com.example.hellondk.MainActivity 注意是bin/classes冒号不是分号，*nix系的分隔符是冒号不是分号，如设置环境变量一样，不然会出现以下错误： 错误: 未指定类 bash: /home/xxx/android-sdk-linux/platforms/android-21/android.jar: 权限不够</p>
+
+  <p>window：将classes后面的冒号改为分号</p>
+</blockquote>
+
+<p>　这里顺便讲下Mac如何修改文件的权限：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">chmod</span> <span class="n">a</span><span class="o">+</span><span class="n">x</span> <span class="o">./</span><span class="n">android</span><span class="o">.</span><span class="na">jar</span></code></pre></figure>
+
+<p>　
+3. *.h -&gt; *.c 直接创建*.c文件</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">include</span><span class="o">&lt;</span><span class="n">stdio</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;</span>
+<span class="err">#</span><span class="n">include</span><span class="o">&lt;</span><span class="n">stdlib</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;</span>
+<span class="err">#</span><span class="n">include</span> <span class="s">"生成文件.h"</span>
+
+<span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">Java_com_xxx_xxx</span>
+  <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span> <span class="n">env</span><span class="o">,</span> <span class="n">jclass</span> <span class="n">jclass</span><span class="o">){</span>
+	<span class="k">return</span> <span class="o">(*</span><span class="n">env</span><span class="o">)-&gt;</span><span class="n">NewStringUTF</span><span class="o">(</span><span class="n">env</span><span class="o">,</span> <span class="s">"I'm from JNI!"</span><span class="o">);</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>　
+4. *.c -&gt; *.so :
+这里需要将讲下Android.mk文件：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 生成的module名，后面java文件中加载so文件，用的就是这个名称</span>
+<span class="n">LOCAL_MODULE</span> <span class="o">:=</span> <span class="n">hello</span><span class="o">-</span><span class="n">jin</span>        
+<span class="c1">// 编译的c文件</span>
+<span class="n">LOCAL_SRC_FILES</span> <span class="o">:=</span> <span class="n">hello</span><span class="o">-</span><span class="n">jni</span><span class="o">.</span><span class="na">c</span></code></pre></figure>
+
+<p>再说下Application.mk：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 不写Application.mk文件，或者此文件为空，默认只会编译出armeabi</span>
+<span class="c1">// 如果需要编译出所有平台的文件，如下：</span>
+<span class="n">APP_ABI</span> <span class="o">:=</span> <span class="n">all</span></code></pre></figure>
+
+<p>最后java环境中</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 加载so文件</span>
+<span class="kd">static</span><span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">"hello-jin"</span><span class="o">);</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>交叉编译：就是在一个平台上生成另一个平台上的可执行代码</p>
+
+<h2 id="jnieclipsehttpwwwimooccomlearn411">五、<a href="http://www.imooc.com/learn/411">JNI交互处理、Eclipse环境配置</a></h2>
+
+<p>由于c部分代码不熟悉，这里提供<a href="http://www.imooc.com/learn/411">视频讲解地址</a></p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Android单元测试<中>(Android官方MVP架构示例项目解析)</title>
 	  <link>//androidtu-2</link>
 	  <author>LuckyTurbo</author>
@@ -2106,235 +2218,6 @@ answer:通过反，Activity也是通过这种方式生成的</p>
   <p>依赖就像一夜情，依赖就是使用XX干了YY(仅仅是用了Ta的一个方法)，关联是夫妻，你所有的都是你老婆的(你是你老婆的成员变量)
 依赖就是对象偶然需要其它对象的某个方法或者某个属性，而关联是方向性的拥有关系，拥有那个对象，拥有那个对象的所有对外属性以及对外方法，完全深度拥有。</p>
 </blockquote>
-
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>Android控件注解IOC注入(XUtils实现方式)</title>
-	  <link>//iocxutils</link>
-	  <author>LuckyTurbo</author>
-	  <pubDate>2016-03-29T00:00:00+08:00</pubDate>
-	  <guid>//iocxutils</guid>
-	  <description><![CDATA[
-	     <h2 id="xutils">注解初始化控件(XUtils方式)</h2>
-
-<blockquote>
-  <p><a href="http://download.csdn.net/detail/yuanyang5917/9477513">DEMO链接地址</a></p>
-</blockquote>
-
-<blockquote>
-  <p>在第一次潭州教育的公开课上接触了这个框架的讲解，我动手研究了一下，结果一出手就停不下来，先后被我碰上了（<a href="http://tech.glowing.com/cn/dynamic-android-programming/">Glow公司的技术博客——动态Android编程</a> ）、从几个大牛的博客（学到了github pages + Jekyll 免费制作博客网站）<br />
-我发现不写博客，很多东西就会忘记(代码如何上传到jcenter我已经忘记了)<br />
-Just Do it!真的会有意想不到的收获！</p>
-</blockquote>
-
-<p><img src="http://img.blog.csdn.net/20160329132113633" alt="实现效果" />
- 1. IOC概念介绍
-http://www.cnblogs.com/qqlin/archive/2012/10/09/2707075.html我是从这边文章学习的IOC概念的，写的浅显易懂</p>
-
-<ul>
-  <li>控件反转(IOC)：创建何种对象的控制权，转移到第三方</li>
-  <li>依赖注入(DI)：是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。</li>
-  <li>IOC与DI之间的关系：DI是一种IOC的具体思想，(编译运行期，动态注入依赖关系)；使用配置文件实现依赖关系的配置也是一种IOC思想（依赖拖拽）。</li>
-  <li>约定优于配置 这个是什么鬼？？</li>
-  <li>依赖注入／依赖查找／依赖拖拽
-    <ul>
-      <li>依赖拖拽是通过对注入对象的集中配置实现的</li>
-      <li>依赖查找是在业务组件代码中进行的（EJB和Apache Avalon ）
-        <ol>
-          <li>XUtils的实现方式XUtils实际上是通过 注解 ＋ 反射 ＋ 动态代理实现的。</li>
-        </ol>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="layout">layout文件注入：</h2>
-<ul>
-  <li>使用：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@ContentViewInject</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span></code></pre></figure>
-
-<ul>
-  <li>注解：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">TYPE</span><span class="o">)</span><span class="c1">// 使用对象：类</span>
-<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span><span class="c1">// 生命范围：运行期</span>
-<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">ContentViewInject</span> <span class="o">{</span>    
-	<span class="kt">int</span> <span class="n">value</span><span class="o">();</span><span class="c1">// 存放布局id</span>
-<span class="o">}</span></code></pre></figure>
-
-<ul>
-  <li>注入代码：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java">	<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">injectLayout</span><span class="p">(</span><span class="n">Activity</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="c1">// UIClz</span>
-            <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Context</span><span class="o">&gt;</span> <span class="n">uiClass</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
-            <span class="c1">// 类上的注解</span>
-            <span class="n">ContentViewInject</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">ContentViewInject</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">annotation</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                <span class="c1">// 注解中的layout id值</span>
-                <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="na">value</span><span class="o">();</span>
-                <span class="c1">// 通过反射使用activity中的setContentView方法进行 布局设置</span>
-                <span class="c1">// 局限性：这个方法仅仅适用于activity</span>
-                <span class="n">Method</span> <span class="n">setContentView</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="s">"setContentView"</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-                <span class="n">setContentView</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-        <span class="o">}</span>
-    <span class="o">}</span></code></pre></figure>
-
-<h2 id="section">控件注入：</h2>
-
-<ul>
-  <li>使用：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@ViewInject</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView</span><span class="o">)</span>
-<span class="n">TextView</span> <span class="n">textView</span><span class="o">;</span>
-<span class="o">......</span>
-  <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="n">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
-        <span class="n">TurInject</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-        <span class="n">textView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">"徕帝嘎嘎"</span><span class="o">);</span>
-    <span class="o">}</span></code></pre></figure>
-
-<ul>
-  <li>注解：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">FIELD</span><span class="o">)</span>
-<span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
-<span class="kd">public</span> <span class="nd">@interface</span> <span class="n">ViewInject</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">value</span><span class="o">();</span>
-<span class="o">}</span></code></pre></figure>
-
-<ul>
-  <li>注入：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java">	<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">injectViews</span><span class="p">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Context</span><span class="o">&gt;</span> <span class="n">uiClass</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
-            <span class="c1">// 获取成员变量</span>
-            <span class="n">Field</span><span class="o">[]</span> <span class="n">fields</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getDeclaredFields</span><span class="o">();</span>
-            <span class="k">for</span> <span class="o">(</span><span class="n">Field</span> <span class="n">field</span> <span class="o">:</span> <span class="n">fields</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">ViewInject</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">ViewInject</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">annotation</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="na">value</span><span class="o">();</span>
-                    <span class="n">Method</span> <span class="n">findViewById</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="s">"findViewById"</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-                    <span class="n">Object</span> <span class="n">invoke</span> <span class="o">=</span> <span class="n">findViewById</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
-                    <span class="c1">// 设置允许访问</span>
-                    <span class="n">field</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-                    <span class="n">field</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">invoke</span><span class="o">);</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-        <span class="o">}</span>
-    <span class="o">}</span></code></pre></figure>
-
-<h2 id="section-1">事件注入</h2>
-
-<ul>
-  <li>使用代码：</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java">	<span class="nd">@ClickEvent</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="o">{</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView</span><span class="o">},</span> <span class="n">type</span> <span class="o">=</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="n">ccClick</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">getBaseContext</span><span class="o">(),</span> <span class="s">"ccClick"</span><span class="o">,</span> <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_LONG</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
-    <span class="o">}</span>
-
-    <span class="nd">@ClickEvent</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="o">{</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView</span><span class="o">},</span> <span class="n">type</span> <span class="o">=</span> <span class="n">View</span><span class="o">.</span><span class="na">OnLongClickListener</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="n">longClick</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">getBaseContext</span><span class="o">(),</span> <span class="s">"longClick"</span><span class="o">,</span> <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_LONG</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
-    <span class="o">}</span></code></pre></figure>
-
-<ul>
-  <li>注解</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-java" data-lang="java"> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">injectMethod</span><span class="p">(</span><span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Context</span><span class="o">&gt;</span> <span class="n">uiClass</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
-            <span class="c1">// 获取所有的方法</span>
-            <span class="n">Method</span><span class="o">[]</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getMethods</span><span class="o">();</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kd">final</span> <span class="n">Method</span> <span class="n">method</span> <span class="o">:</span> <span class="n">methods</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">ClickEvent</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">ClickEvent</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-                <span class="c1">// 塞选含有ClickEvent注解的方法</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">annotation</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                    <span class="kt">int</span><span class="o">[]</span> <span class="n">values</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="na">value</span><span class="o">();</span>
-                    <span class="n">Class</span> <span class="n">type</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="na">type</span><span class="o">();</span>
-                    <span class="c1">// 拿到控件</span>
-                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">viewId</span> <span class="o">:</span> <span class="n">values</span><span class="o">)</span> <span class="o">{</span>
-                        <span class="c1">// 初始化控件</span>
-                        <span class="n">Method</span> <span class="n">findViewById</span> <span class="o">=</span> <span class="n">uiClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="s">"findViewById"</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-                        <span class="c1">// view</span>
-                        <span class="kd">final</span> <span class="n">Object</span> <span class="n">viewObj</span> <span class="o">=</span> <span class="n">findViewById</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">viewId</span><span class="o">);</span>
-
-                        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">viewClass</span> <span class="o">=</span> <span class="n">viewObj</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
-                        <span class="c1">// setOnClickListener／setOnLongClickListener等等</span>
-                        <span class="n">String</span> <span class="n">viewSetMethodName</span> <span class="o">=</span> <span class="s">"set"</span> <span class="o">+</span> <span class="n">type</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">();</span>
-                        <span class="n">Method</span> <span class="n">viewMethod</span> <span class="o">=</span> <span class="n">viewClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="n">viewSetMethodName</span><span class="o">,</span> <span class="n">type</span><span class="o">);</span>
-
-                        <span class="c1">// 动态代理就是针对 任意 一个对象的接口方法的  管理／拦截／AOP</span>
-                        <span class="n">ViewEventInvocationHandler</span> <span class="n">viewEventInvocationHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ViewEventInvocationHandler</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">method</span><span class="o">);</span>
-                        <span class="c1">//  type.getClassLoader ： 类加载器   new Class[]{type} ： type为接口类</span>
-                        <span class="n">Object</span> <span class="n">eventInterfaceInstance</span> <span class="o">=</span> <span class="n">Proxy</span><span class="o">.</span><span class="na">newProxyInstance</span><span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Class</span><span class="o">[]{</span><span class="n">type</span><span class="o">},</span> <span class="n">viewEventInvocationHandler</span><span class="o">);</span>
-                        <span class="c1">// 动态代理  OnClickListener 中的</span>
-                        <span class="c1">// 执行了setOnClickListener这个方法，那么在响应这个参数OnClickListener接口中的，onclick方法的时候会响应InvocationHandler中的invoke方法</span>
-                        <span class="n">viewMethod</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">viewObj</span><span class="o">,</span> <span class="n">eventInterfaceInstance</span><span class="o">);</span>
-                    <span class="o">}</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-        <span class="o">}</span>
-
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ViewEventInvocationHandler</span> <span class="kd">implements</span> <span class="n">InvocationHandler</span> <span class="o">{</span>
-        <span class="kd">private</span> <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
-        <span class="kd">private</span> <span class="n">Method</span> <span class="n">contentMethod</span><span class="o">;</span>
-
-        <span class="kd">public</span> <span class="n">ViewEventInvocationHandler</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Method</span> <span class="n">contentMethod</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">contentMethod</span> <span class="o">=</span> <span class="n">contentMethod</span><span class="o">;</span>
-        <span class="o">}</span>
-
-        <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="n">Object</span> <span class="n">invoke</span><span class="o">(</span><span class="n">Object</span> <span class="n">proxy</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-            <span class="c1">// method 为OnClickListener 中的 onClick</span>
-            <span class="c1">// 系统调用参数接口中的 onClick方法的时候，会响应这个方法</span>
-            <span class="c1">// 响应这个方法的时候我们需要响应(activity中被ClickEvent标记过的方法)</span>
-            <span class="c1">// contentMethod 为activity中被 ClickEvent标记过的方法</span>
-            <span class="n">contentMethod</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}</span></code></pre></figure>
-
-<p><a href="https://www.zhihu.com/question/20794107">知乎——代理、动态代理</a></p>
-
-<ul>
-  <li>主要用来做方法的增强，让你可以在不修改源码的情况下，增强一些方法，在方法执行前后做任何你想做的事情（甚至根本不去执行这个方法），因为在InvocationHandler的invoke方法中，你可以直接获取正在调用方法对应的Method对象，具体应用的话，比如可以添加调用日志，做事务控制等。</li>
-  <li>还有一个有趣的作用是可以用作远程调用</li>
-  <li>在某些情况下，一个客户不想或者不能直接引用另一个对象，而代理对象可以在客户端和目标对象之间起到中介的作用。</li>
-  <li>为其他对象提供一种代理以控制对这个对象的访问</li>
-  <li>
-    <p>动态代理的缺憾：Proxy已经设计得非常优美，但是还是有一点点小小的遗憾之处，那就是它始终无法摆脱仅支持interface代理的桎梏</p>
-
-    <p>到这里呢，XUtils的布局注入、控件注入、事件注入就全部介绍完了！</p>
-  </li>
-</ul>
 
 
 	  ]]></description>

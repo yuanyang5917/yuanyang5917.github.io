@@ -105,7 +105,7 @@
             <span class="author-location icon-location">苏州, China</span>
             <span class="author-link icon-link"><a href="http://yuanyang5917.github.io/">yuanyang5917.github.io/</a></span>
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <span class="author-stats"><i class="icon-stats"></i>11 posts</span>
+            <span class="author-stats"><i class="icon-stats"></i>12 posts</span>
         </div>
     </section>
 <!-- /author -->
@@ -128,6 +128,30 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/jni-study">Mac上JNI入门</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>入手Mac不久 命令环境设置、文件权限修改 都不熟 这里记录下实现hello-jni的步骤，方便以后查阅 一、NDK下载 当前AndroidStudio中已有集成：android-sdk-macosx/ndk-bundle 没有点此下载官方最新版 二、ndk-build环境配置 跟Window一样，Mac也需要设置环境 需要在bash_profile文件中进行设置： pico .bash_profile进入命令行（关闭：先 control+x 再 y） 　或者open .bash_profile打开文件 添加命令： export NDK_ROOT=/Users/LuckyTurbo/Documents/android-sdk-macosx/ndk-bundle export PATH=$PATH:$NDK_ROOT/ 特别注意：source .bash_profile刷新刚配置的环境 开始设置了好多遍，都无效，蛋疼死了 最后输入ndk-build,验证是否配制成功... <a class="read-more" href="/jni-study">&raquo;</a></p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/casper'>LuckyTurbo</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/android'>Android</a>
+                       
+                
+            
+            <time class="post-date" datetime="2016-05-25">25 May 2016</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -222,30 +246,6 @@
                 
             
             <time class="post-date" datetime="2016-04-28">28 Apr 2016</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/object-oriented">Object-Oriented</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>本篇是根据高焕堂老师的课程归纳记录的，所讲内容包括：Oriented、Class、extends(继承&amp;扩展)、implements、组合、(前三个均有的)Hook方法、IoC(主动调用、被动调用) 1. Oriented 面向 Oriented 意味着一种信仰（万物皆对象） Object-oriented 相信任何软件都是由对象所构成的，而且Nothing else. 根据上述信仰，电脑语言的设计就简化了，写程序只要定义类别（Class）就行了 2. Oriented、Based、Driven、Centered之间的区别? Based 的涵义 例如：Requirement-based基于需求 Requirement-base software development Driven 的涵义 例如：Model-driven（模型引导） 、Use Case-driven（用户使用引导） 其实driven 是“引导”，而不是大家常常说说的“驱动” 就像北极星引导我们，指出方向而已，也像汽车司机(Driver)只是引导汽车方向，并没有去驱动汽车；而引擎才是驱动汽车。... <a class="read-more" href="/object-oriented">&raquo;</a></p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/LuckyTurboHead.gif" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/casper'>LuckyTurbo</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/android'>Android</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-04-23">23 Apr 2016</time>
         </footer>
     </article>
     
