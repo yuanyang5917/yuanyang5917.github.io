@@ -17,6 +17,6 @@ logo: 'assets/images/ghost.png'
 
 好漂亮的模版，谢谢Jasper，谢谢Glow技术团队
 
-邮箱：turboruby5917@gmail.com
+邮箱：yuanyang5917@gmail.com
 
 
